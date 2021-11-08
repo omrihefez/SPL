@@ -19,4 +19,6 @@ int main(int argc, char** argv){
     	backup = nullptr;
     }
     return 0;
+
+    cout << "Hi";
 }
