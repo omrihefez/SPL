@@ -5,9 +5,6 @@ using namespace std;
 
 Studio* backup = nullptr;
 
-int fu(int a){
-    return 0;
-}
 
 int main(int argc, char** argv){
     if(argc!=2){
