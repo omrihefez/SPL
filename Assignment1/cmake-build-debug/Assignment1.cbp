@@ -114,9 +114,6 @@
 		<Unit filename="/mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/src/Workout.cpp">
 			<Option target="Assignment1"/>
 		</Unit>
-		<Unit filename="/mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/src/Workout.h">
-			<Option target="Assignment1"/>
-		</Unit>
 		<Unit filename="/mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/src/main.cpp">
 			<Option target="Assignment1"/>
 		</Unit>
