@@ -19,6 +19,7 @@ public:
     std::vector<Workout>& getWorkoutOptions();
 
 private:
+    static int numOfTrainers;
     bool open;
     std::vector<Trainer*> trainers;
     std::vector<Workout> workout_options;

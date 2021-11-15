@@ -11,4 +11,4 @@ add_executable(Assignment1
         include/Studio.h
         include/Trainer.h
         include/Workout.h
-        src/main.cpp)
+        src/main.cpp src/Studio.cpp src/Trainer.cpp src/Action.cpp src/Customer.cpp src/Workout.cpp)

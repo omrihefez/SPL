@@ -44,7 +44,7 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/."/>
+					<Add directory="/mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/include"/>
 					<Add directory="/usr/include/c++/9"/>
 					<Add directory="/usr/include/x86_64-linux-gnu/c++/9"/>
 					<Add directory="/usr/include/c++/9/backward"/>
@@ -67,7 +67,7 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/."/>
+					<Add directory="/mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/include"/>
 					<Add directory="/usr/include/c++/9"/>
 					<Add directory="/usr/include/x86_64-linux-gnu/c++/9"/>
 					<Add directory="/usr/include/c++/9/backward"/>
@@ -84,22 +84,37 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/Action.h">
+		<Unit filename="/mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/include/Action.h">
 			<Option target="Assignment1"/>
 		</Unit>
-		<Unit filename="/mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/Customer.h">
+		<Unit filename="/mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/include/Customer.h">
 			<Option target="Assignment1"/>
 		</Unit>
-		<Unit filename="/mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/Studio.h">
+		<Unit filename="/mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/include/Studio.h">
 			<Option target="Assignment1"/>
 		</Unit>
-		<Unit filename="/mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/Trainer.h">
+		<Unit filename="/mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/include/Trainer.h">
 			<Option target="Assignment1"/>
 		</Unit>
-		<Unit filename="/mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/Workout.h">
+		<Unit filename="/mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/include/Workout.h">
 			<Option target="Assignment1"/>
 		</Unit>
-		<Unit filename="/mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/main.cpp">
+		<Unit filename="/mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/src/Action.cpp">
+			<Option target="Assignment1"/>
+		</Unit>
+		<Unit filename="/mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/src/Customer.cpp">
+			<Option target="Assignment1"/>
+		</Unit>
+		<Unit filename="/mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/src/Studio.cpp">
+			<Option target="Assignment1"/>
+		</Unit>
+		<Unit filename="/mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/src/Trainer.cpp">
+			<Option target="Assignment1"/>
+		</Unit>
+		<Unit filename="/mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/src/Workout.cpp">
+			<Option target="Assignment1"/>
+		</Unit>
+		<Unit filename="/mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/src/main.cpp">
 			<Option target="Assignment1"/>
 		</Unit>
 		<Unit filename="/mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/CMakeLists.txt">
