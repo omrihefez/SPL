@@ -22,6 +22,8 @@ public:
     int getSalary();
     bool isOpen();
 private:
+    int id;
+    static int idCounter;
     int capacity;
     bool open;
     std::vector<Customer*> customersList;
