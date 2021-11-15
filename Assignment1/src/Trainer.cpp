@@ -4,22 +4,34 @@
 
 #include "../include/Trainer.h"
 
-Trainer::Trainer(int t_capacity) : capacity(t_capacity), open(false) {}
+using namespace std;
+idCounter = 0;
+
+Trainer::Trainer(int t_capacity) : capacity(t_capacity), open(false), id(idCounter++) {}
 
 int Trainer::getCapacity() const {
     return capacity;
 }
 
-void Trainer::addCustomer(Customer *customer) {
+&Trainer getTrainer (int _id){
+    if (id == _id)
+        return &this;
+}
 
+void Trainer::addCustomer(Customer *customer) {
+    customersList.push_back(customer);
 }
 
 void Trainer::removeCustomer(int id) {
-
+    for (int i=0 ; i< customersList.size() ; i++)
+        if (customersList[i].getID() == id)
+            customersList.erase(customersList[i]);
 }
 
 Customer *Trainer::getCustomer(int id) {
-    return nullptr;
+    for (int i=0 ; i< customersList.size() ; i++)
+        if (customersList[i].getID() == id)
+            return customersList[i];
 }
 
 std::vector<Customer *> &Trainer::getCustomers() {

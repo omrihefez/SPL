@@ -1,4 +1,6 @@
-C:\WINDOWS\system32\wsl.exe --distribution Ubuntu --exec /bin/sh -c "export CLION_IDE=TRUE && export JETBRAINS_IDE=TRUE && cd /mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/cmake-build-debug && /usr/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G 'CodeBlocks - Unix Makefiles' /mnt/c/Users/Omri/CLionProjects/SPL/Assignment1"
--- Configuring done
--- Generating done
--- Build files have been written to: /mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/cmake-build-debug
+C:\Users\barza\AppData\Local\JetBrains\CLion2021.2\cygwin_cmake\bin\cmake.exe -DCMAKE_BUILD_TYPE=Debug -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G "CodeBlocks - Unix Makefiles" /cygdrive/c/Users/barza/gitprojects/SPL/Assignment1
+CMake Error: CMake was unable to find a build program corresponding to "Unix Makefiles".  CMAKE_MAKE_PROGRAM is not set.  You probably need to select a different build tool.
+CMake Error: CMAKE_C_COMPILER not set, after EnableLanguage
+CMake Error: CMAKE_CXX_COMPILER not set, after EnableLanguage
+-- Configuring incomplete, errors occurred!
+See also "/cygdrive/c/Users/barza/gitprojects/SPL/Assignment1/cmake-build-debug/CMakeFiles/CMakeOutput.log".
