@@ -5,7 +5,7 @@
 #include "../include/Trainer.h"
 
 using namespace std;
-idCounter = 0;
+int idCounter = 0;
 
 Trainer::Trainer (int t_capacity) : capacity(t_capacity), open(false), id(idCounter++), salary(0), origCapacity(t_capacity) {}
 
