@@ -48,14 +48,15 @@ Studio::Studio(const std::string &configFilePath) {
         if (line[0] == '#'){
             (getline(fstream1, line));
             switch (lineNumber) {
-                case 0:
+                case 0: {
                     string _numOfTrainers = "";
                     for (int i = 0; i < line.length(); i++)
                         _numOfTrainers += line[i];
                     numOfTrainers = stoi(_numOfTrainers);
                     lineNumber++;
                     break;
-                case 1:
+                }
+                case 1: {
                     string capacity = "";
                     for (int i = 0; i < line.length(); i++) {
                         if (line[i] != ',' & line[i] != ' ')
@@ -67,7 +68,8 @@ Studio::Studio(const std::string &configFilePath) {
                     }
                     lineNumber++;
                     break;
-                case 2:
+                }
+                case 2: {
                     int id = 0;
                     buildWorkout(id, line);
                     id++;
@@ -76,6 +78,7 @@ Studio::Studio(const std::string &configFilePath) {
                         id++;
                     }
                     break;
+                }
             }
         }
     }
@@ -86,81 +89,93 @@ Studio::Studio(const std::string &configFilePath) {
 void Studio::start() {
     open = true;
     cout << "Studio is now open!" << endl;
+    enum options = {};
     string s;
-    cin << s;
+    std::cin >> s;
     switch (s) {
-        case s.substr(0,s.find_first_of(" ")-1) == "open":
-            int firstSpace= find_first_of(" ");
-            vector<Customer *> &customers;
-            int trainerId= stoi(s.substr[firstSpace+1,(s.substr(firstSpace+1,s.length-1)).find_first_of(" ")-1]);
+        case (s.substr(0,s.find_first_of(" ")-1) == "open"): {
+            int firstSpace = find_first_of(" ");
+            vector < Customer * > &customers;
+            int trainerId = stoi(
+                    s.substr[firstSpace + 1, (s.substr(firstSpace + 1, s.length - 1)).find_first_of(" ") - 1]);
             int start = firstspace + 3;
             while (start < s.length()) {
                 string name = "";
                 string customerIdString = "";
-                for (int i = start; i < (s.substr(start,s.length-1)).find_first_of(","); i++) {
+                for (int i = start; i < (s.substr(start, s.length - 1)).find_first_of(","); i++) {
                     name += s[i];
                     start = i;
                 }
-                for (int i = start+1 ; i < (s.substr(start,s.length-1)).find_first_of(" "); i++){
+                for (int i = start + 1; i < (s.substr(start, s.length - 1)).find_first_of(" "); i++) {
                     customerIdString += s[i];
-                    start = i
+                    start = i;
                 }
-                Customer toAdd =  Customer(name,stoi(customerIdString));
+                Customer toAdd = Customer(name, stoi(customerIdString));
                 customers.push_back(toAdd);
-                start ++;
-                start ++;
-           }
-            BaseAction a = OpenTrainer(trainerId,customers);
+                start++;
+                start++;
+            }
+            BaseAction a = OpenTrainer(trainerId, customers);
             a.act(this);
-        case s.substr(0,s.find_first_of(" ")-1) == "order":
+        }
+        case (s.substr(0,s.find_first_of(" ")-1) == "order"): {
             string trainerId = "";
-            for (int i = s.find_first_of(" ")+1 ; i < s.length() ; i++ )
+            for (int i = s.find_first_of(" ") + 1; i < s.length(); i++)
                 trainerId += s[i];
             BaseAction a = order(stoi(trainerId));
             a.act(this);
-        case s.substr(0,s.find_first_of(" ")-1) == "move":
+        }
+        case (s.substr(0,s.find_first_of(" ")-1) == "move"): {
             string src = "";
             string dst = "";
             string customerId = "";
-            start = s.find_first_of(" ")+1
+            start = s.find_first_of(" ") + 1
             for (int i = start; i < s.length() && s[i] != " "; i++) {
                 src += s[i];
                 start++;
             }
-            for (int i = start++ ; i < s.length() && s[i] != " " ; i++){
+            for (int i = start++; i < s.length() && s[i] != " "; i++) {
                 dst += s[i];
                 start++;
             }
-            for (int i= start++ ; i < s.length() ; i++){
+            for (int i = start++; i < s.length(); i++) {
                 customerId += s[i];
             }
             BaseAction a = MoveCustomer(stoi(src), stoi(dst), stoi(customerId));
             a.act(this);
-        case s.substr(0,s.find_first_of(" ")-1) == "close":
-            int trainerId = stoi(s.substring(6,s.length()-1));
+        }
+        case (s.substr(0,s.find_first_of(" ")-1) == "close"): {
+            int trainerId = stoi(s.substring(6, s.length() - 1));
             BaseAction a = close(trainerId);
             a.act(this);
-        case s.substr(0,s.find_first_of(" ")-1) == "status":
-            int trainerId = stoi(s.substring(7,s.length()-1));
+        }
+        case (s.substr(0,s.find_first_of(" ")-1) == "status"): {
+            int trainerId = stoi(s.substring(7, s.length() - 1));
             BaseAction a = PrintTrainerStatus(trainerId);
             a.act(this);
-        case s == "workout_options":
+        }
+        case (s == "workout_options"): {
             BaseAction a = PrintWorkoutOptions();
             a.act(this);
-        case s == "log":
+        }
+        case (s == "log"): {
             BaseAction a = PrintActionsLog();
             a.act(this);
-        case s == "backup":
+        }
+        case (s == "backup"): {
             BaseAction a = BackupStudio();
             a.act(this);
-        case s == "restore":
+        }
+        case (s == "restore"): {
             BaseAction a = RestoreStudio();
             a.act(this);
-        case s == "closeall":
+        }
+        case (s == "closeall"): {
             BaseAction a = CloseAll();
             a.act(this);
             open = false;
             break;
+        }
 
     }
 }
@@ -184,4 +199,41 @@ const std::vector<BaseAction *> &Studio::getActionsLog() const {
 std::vector<Workout> &Studio::getWorkoutOptions() {
     return workout_options;
 }
+
+bool isOpen(){
+    return open;
+}
+
+//rule of 5
+virtual ~Studio(){
+    clear();
+}
+
+void clear(){
+    if (this.trainers){
+        for (int i = 0; i < this.trainers.lenth(); i++)
+            delete this.trainers[i];
+    }
+
+    if (this.actionsLog){
+        for (int i = 0; i < this.actionsLog.lenth(); i++)
+            delete this.actionsLog[i];
+    }
+}
+
+Studio (const Studio &other){
+    numOfTrainers = other.getNumOfTrainers();
+    open = other.isOpen();
+    trainers = vector<Trainer*>(numOfTrainers);
+    for (int i = 0; i < numOfTrainers; i++){
+        trainers.push_back(other.getTrainer(i));
+    }
+    workout_options = other.getWorkoutOptions();
+    actionsLog = other.getActionsLog();
+}
+
+Studio& operator=(const Studio &other){
+
+}
+
 

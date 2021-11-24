@@ -37,7 +37,7 @@ void Trainer::addCustomer(Customer *customer) {
 
 void Trainer::removeCustomer(int id) {
     for (int i=0 ; i < customersList.size() ; i++)
-        if (customersList[i].getID() == id) {
+        if (customersList[i].getId() == id) {
             delete(customersList[i]);
             customersList.erase(customersList[i]);
             capacity++;
