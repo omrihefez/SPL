@@ -149,7 +149,7 @@ int PrintWorkoutOptions::toString() const {
 PrintTrainerStatus::PrintTrainerStatus(int id): BaseAction(), trainerId(id) {}
 
 void PrintTrainerStatus::act(Studio &studio) {
-    (studio.getActionLog).push_back(this);
+    (studio.getActionLog()).push_back(this);
     Trainer* t = studio.getTrainer(trainerId);
     std::string status = t->isOpen() ? "open" : "closed";
     cout << "Trainer " << trainerId << " status: " << status << endl;

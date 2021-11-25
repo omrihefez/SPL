@@ -8,6 +8,7 @@ using namespace std;
 #include <string>
 #include <fstream>
 #include <algorithm>
+#include <cstring>
 #include "../include/Studio.h"
 
 int customerId = 0;
@@ -60,9 +61,9 @@ Studio::Studio(const std::string &configFilePath) {
                 case 1: {
                     string capacity = "";
                     for (int i = 0; i < line.length(); i++) {
-                        if (line[i] != ',' & line[i] != ' ')
+                        if (strcmp(line[i], ",") != 0  & strcmp(line[i], " ") != 0)
                             capacity += line[i];
-                        else if (line[i] == ',') {
+                        else if (strcmp(line[i], ",")) == 0) {
                             Trainer(stoi(capacity));
                             capacity = "";
                         }
@@ -129,9 +130,9 @@ void Studio::start() {
                     swt, chp, mcl, fbd
                 };
                 customerType ct;
-                for (start; start < s.length(); start++) {
+                for (start; (size_t)start < s.length(); start++) {
                     int index = start;
-                    while (&s[index] != ",") {
+                    while (strcmp(&s[index], ",") != 0) {
                         customerName += s[index];
                         index++;
                     }
@@ -174,7 +175,7 @@ void Studio::start() {
             }
             case (1): {
                 string trainerId = "";
-                for (int i = s.find_first_of(" ") + 1; i < s.length(); i++)
+                for (size_t i = s.find_first_of(" ") + 1; i < s.length(); i++)
                     trainerId += s[i];
                 Order a = Order(stoi(trainerId));
                 a.act(*this);
@@ -186,15 +187,15 @@ void Studio::start() {
                 string dst = "";
                 string customerId = "";
                 int start = s.find_first_of(" ") + 1;
-                for (int i = start; i < s.length() && &s[i] != " "; i++) {
+                for (size_t i = start; i < s.length() && strcmp(&s[i], " ") != 0; i++) {
                     src += s[i];
                     start++;
                 }
-                for (int i = start++; i < s.length() && &s[i] != " "; i++) {
+                for (size_t i = start++; i < s.length() && strcmp(&s[i], " ") != 0 ; i++) {
                     dst += s[i];
                     start++;
                 }
-                for (int i = start++; i < s.length(); i++) {
+                for (size_t i = start++; i < s.length(); i++) {
                     customerId += s[i];
                 }
                 MoveCustomer a = MoveCustomer(stoi(src), stoi(dst), stoi(customerId));
@@ -258,7 +259,7 @@ int Studio::getNumOfTrainers() const {
 }
 
 Trainer *Studio::getTrainer(int tid) {
-    if (tid > trainers.size())
+    if (tid < 0 || (size_t)tid > trainers.size())
         return nullptr;
     else
         return trainers[tid];
@@ -281,14 +282,14 @@ bool Studio::isOpen(){
 Studio::~Studio(){
     open = false;
     if (!trainers.empty()){
-        for (int i = 0; i < trainers.size(); i++)
-            delete trainers[i];
+        for (size_t i = 0; i < trainers.size(); i++)
+            delete *trainers[i];
     }
     trainers.clear();
     workout_options.clear();
     if (!actionsLog.empty()){
-        for (int i = 0; i < actionsLog.size(); i++)
-            delete actionsLog[i];
+        for (size_t i = 0; i < actionsLog.size(); i++)
+            delete *actionsLog[i];
     }
     actionsLog.clear();
 }
@@ -301,10 +302,10 @@ Studio::Studio (const Studio &other): Studio() {
         trainers.push_back(&t);
     }
     vector<Workout> other_workout_options = other.workout_options;
-    for (int i = 0; i < other_workout_options.size(); i++)
+    for (size_t i = 0; i < other_workout_options.size(); i++)
         workout_options.push_back(other_workout_options[i]);
     vector<BaseAction*> otherActionlog = other.actionsLog;
-    for (int i = 0; i < actionsLog.size(); i++){
+    for (size_t i = 0; i < actionsLog.size(); i++){
         BaseAction *action = (otherActionlog[i]);
         actionsLog.push_back(action);
     }
@@ -322,12 +323,12 @@ Studio &Studio::operator=(const Studio &other) {
         trainers.push_back(&t);
     }
     workout_options.clear();
-    for (int i = 0; i < other.workout_options.size(); i++){
+    for (size_t i = 0; i < other.workout_options.size(); i++){
         workout_options.push_back(other.workout_options[i]);
     }
     actionsLog.clear();
     vector<BaseAction*> otherActionlog = other.actionsLog;
-    for (int i = 0; i < actionsLog.size(); i++){
+    for (size_t i = 0; i < actionsLog.size(); i++){
         BaseAction *action = (otherActionlog[i]);
         actionsLog.push_back(action);
     }
@@ -339,10 +340,10 @@ Studio::Studio(Studio &&other): open(other.open), trainers(std::move(other.train
                                 workout_options(std::move(other.workout_options)), actionsLog(std::move(other.actionsLog)) {
     other.open = false;
     other.workout_options.clear();
-    for (int i = 0; i < other.trainers.size(); i++)
+    for (size_t i = 0; i < other.trainers.size(); i++)
         other.trainers[i] = nullptr;
     other.trainers.clear();
-    for (int i = 0; i < other.actionsLog.size(); i++)
+    for (size_t i = 0; i < other.actionsLog.size(); i++)
         other.actionsLog[i] = nullptr;
     other.actionsLog.clear();
 
@@ -358,10 +359,10 @@ Studio &Studio::operator=(Studio &&other){
     actionsLog = std::move(other.actionsLog);
     other.open = false;
     other.workout_options.clear();
-    for (int i = 0; i < other.trainers.size(); i++)
+    for (size_t i = 0; i < other.trainers.size(); i++)
         other.trainers[i] = nullptr;
     other.trainers.clear();
-    for (int i = 0; i < other.actionsLog.size(); i++)
+    for (size_t i = 0; i < other.actionsLog.size(); i++)
         other.actionsLog[i] = nullptr;
     other.actionsLog.clear();
     return *this;
