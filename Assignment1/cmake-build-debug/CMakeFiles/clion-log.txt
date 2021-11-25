@@ -14,3 +14,4 @@ C:\WINDOWS\system32\wsl.exe --distribution Ubuntu --exec /bin/sh -c "export CLIO
 -- Configuring done
 -- Generating done
 -- Build files have been written to: /mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/cmake-build-debug
+
