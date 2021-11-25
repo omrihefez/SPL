@@ -3,7 +3,7 @@
 //
 
 #include "../include/Action.h"
-
+using namespace std;
 extern Studio* backup;
 
 BaseAction::BaseAction() {}
@@ -36,9 +36,9 @@ void OpenTrainer::act(Studio &studio) {
 
 std::string OpenTrainer::toString() const {
     std::string s = "open" + std::to_string(trainerId) + " ";
-    for(std::vector<Customer*>s::iterator i = customers.begin(); i != customers.end(); i++)
-        s += " " + i.toString();
-    }
+    for(int i=0 ; i < customers.size() ; i++)
+        s += " " + customers[i]->toString();
+
     return s;
 }
 
@@ -52,7 +52,7 @@ void Order::act(Studio &studio) {
     }
     else{
         std::vector<Workout>& options = studio.getWorkoutOptions();
-        std::vector<Customer *>&::iterator iter = (t->getCustomers()).begin();
+        std::vector<Customer *>::iterator iter = (t->getCustomers()).begin();
         while (iter != (t->getCustomers()).end()){
             std::vector<int> o = iter->Customer::order();
             t->order(iter.getId(), o, options);
@@ -77,7 +77,7 @@ void MoveCustomer::act(Studio &studio) {
         !sTrainer->isOpen() | !dTrainer->isOpen() | sTrainer->getCustomer(id) == nullptr | dTrainer->getCapacity() == 0)
         error("Cannot move customer.");
     else {
-        Costumer *c = sTrainer->getCustomer(id);
+        Customer *c = sTrainer->getCustomer(id);
         sTrainer->removeCustomer(id);
 
         dTrainer->addCustomer(c);
@@ -125,7 +125,7 @@ void CloseAll::act(Studio &studio) {
     }
 }
 
-int CloseAll::toString() const {
+string CloseAll::toString() const {
     return "closeall";
 }
 
@@ -134,15 +134,15 @@ PrintWorkoutOptions::PrintWorkoutOptions(): BaseAction() {}
 void PrintWorkoutOptions::act(Studio &studio) {
     (studio.getActionLog).push_back(this);
     std::vector<Workout>& options = studio.getWorkoutOptions();
-    std::vector<Workout>&::iterator iter = options.begin();
+    std::vector<Workout>::iterator iter = options.begin();
     while(iter != options.end()){
-        cout << iter.getName() << ", " << iter.getType << ", " << iter.getPrice << endl;
+        std::cout << iter.getName() << ", " << iter.getType << ", " << iter.getPrice << std::endl;
         iter++;
     }
     complete();
 }
 
-int PrintWorkoutOptions::toString() const {
+string PrintWorkoutOptions::toString() const {
     return "workout_options";
 }
 
@@ -155,8 +155,8 @@ void PrintTrainerStatus::act(Studio &studio) {
     cout << "Trainer " << trainerId << " status: " << status << endl;
     if (t->isOpen()){
         cout << "Costumers:" << endl;
-        vector<Costumer *> &c = t->getCustomers();
-        for (std::vector<Costumer*>::iterator i = c.begin(); i != c.end(); i++)
+        vector<Customer*> &c = t->getCustomers();
+        for (std::vector<Customer*>::iterator i = c.begin(); i != c.end(); i++)
             cout << i.getId() << " " << i.getName() << endl;
         vector<OrderPair>& orders = t->getOrders();
         for (std::vector<OrderPair>::iterator i = orders.begin(); int != orders.end(); i++){
@@ -175,7 +175,7 @@ PrintActionsLog::PrintActionsLog(): BaseAction() {}
 
 void PrintActionsLog::act(Studio &studio) {
     std::vector<BaseAction*>& log = studio.getActionsLog();
-    for (std::vector<BaseAction*>::iterator i = log.begin(); i != log.end; i++){
+    for (std::vector<BaseAction*>::iterator i = log.begin(); i != log.end(); i++){
         string status = i.getStatus() == COMPLETED ? "Completed" : "Error: " + i.getErrorMsg();
         cout << i->toString() << " " << status << endl;
     }
@@ -183,7 +183,7 @@ void PrintActionsLog::act(Studio &studio) {
     complete();
 }
 
-int PrintActionsLog::toString() const {return "log";}
+string PrintActionsLog::toString() const {return "log";}
 
 BackupStudio::BackupStudio(): BaseAction() {}
 
@@ -193,7 +193,7 @@ void BackupStudio::act(Studio &studio) {
     complete();
 }
 
-int BackupStudio::toString() const {return "backup";}
+string BackupStudio::toString() const {return "backup";}
 
 RestoreStudio::RestoreStudio(): BaseAction() {}
 
@@ -207,7 +207,7 @@ void RestoreStudio::act(Studio &studio) {
     }
 }
 
-int RestoreStudio::toString() const {return "restore";}
+string RestoreStudio::toString() const {return "restore";}
 
 
 

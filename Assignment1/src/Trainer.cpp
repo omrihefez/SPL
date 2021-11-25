@@ -48,7 +48,7 @@ void Trainer::clear() {
 
 // Move Constructor
 Trainer::Trainer(Trainer&& other)
-        : capacity(other.capacity), open(other.open), id(other.id), salary(other.salary), origCapacity(other.origCapacity)
+        : id(other.id), capacity(other.capacity), open(other.open), salary(other.salary), origCapacity(other.origCapacity)
 {
     other.capacity = 0 ;
     other.open = false ;
@@ -101,7 +101,7 @@ void Trainer::removeCustomer(int id) {
         }
     for (int j=0 ; j < orderList.size() ; j++)
         if (orderList[j].first == id){
-            salary -= orderList[j].first.getPrice();
+            salary -= orderList[j].second.getPrice();
             orderList.erase(orderList.begin()+j);
         }
 }
@@ -123,7 +123,7 @@ std::vector<OrderPair> &Trainer::getOrders() {
 void
 Trainer::order(const int customer_id, const std::vector<int> workout_ids, const std::vector<Workout> &workout_options) {
     for (int i=0 ; i < workout_ids.size() ; i++){
-        orderList.push_back(customer_id,workout_options[workout_ids[i]]);
+        orderList.push_back(make_pair(customer_id,workout_options[workout_ids[i]]));
         salary += workout_options[workout_ids[i]].getPrice();
     }
 }

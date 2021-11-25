@@ -4,7 +4,7 @@
 #include <string>
 #include <iostream>
 #include "Customer.h"
-
+#include <Trainer.h>
 enum ActionStatus{
     COMPLETED, ERROR
 };
