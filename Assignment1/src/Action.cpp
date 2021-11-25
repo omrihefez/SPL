@@ -79,6 +79,7 @@ void MoveCustomer::act(Studio &studio) {
     else {
         Costumer *c = sTrainer->getCustomer(id);
         sTrainer->removeCustomer(id);
+
         dTrainer->addCustomer(c);
         complete();
     }
