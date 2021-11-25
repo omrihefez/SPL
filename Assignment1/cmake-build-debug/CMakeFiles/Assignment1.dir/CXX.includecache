@@ -1,0 +1,32 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/include/Customer.h
+vector
+-
+string
+-
+Workout.h
+/mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/include/Workout.h
+
+/mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/include/Trainer.h
+vector
+-
+Customer.h
+/mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/include/Customer.h
+Workout.h
+/mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/include/Workout.h
+
+/mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/include/Workout.h
+string
+-
+
+/mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/src/Trainer.cpp
+../include/Trainer.h
+/mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/include/Trainer.h
+

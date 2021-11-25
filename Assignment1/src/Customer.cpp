@@ -43,9 +43,9 @@ std::vector<int> CheapCustomer::order(const std::vector<Workout> &workout_option
     int cheapestPrice = -1;
     int idToReturn = -1;
     for (vector<Workout>::iterator it = workout_options.begin(); it < workout_options.end(); it++){
-        if (it->getPrice() < cheapestPrice){
-            idToReturn = it->getId();
-            cheapestPrice = it->getPrice();
+        if (it.getPrice() < cheapestPrice | (it.getPrice() == cheapestPrice & it.getId < idToReturn)){
+            idToReturn = it.getId();
+            cheapestPrice = it.getPrice();
         }
     }
     if (idToReturn != -1)
@@ -69,12 +69,12 @@ std::vector<int> HeavyMuscleCustomer::order(const std::vector<Workout> &workout_
     std::vector<int> orders;
     vector<Workout> anaerobics;
     for (vector<Workout>::iterator it = workout_options.begin(); it < workout_options.end(); it++){
-        if (it->getType() == ANAEROBIC)
+        if (it.getType() == ANAEROBIC)
             anaerobics.push_back(it);
     }
     std::sort(anaerobics.begin(), anaerobics.end(), compareWorkoutByPrice);
     for (vector<Workout>::iterator it = anaerobics.begin(); it < anaerobics.end(); it++){
-        orders.push_back(it->getId());
+        orders.push_back(it.getId());
     }
     return orders;
 }
@@ -82,15 +82,42 @@ std::vector<int> HeavyMuscleCustomer::order(const std::vector<Workout> &workout_
 
 
 std::string HeavyMuscleCustomer::toString() const {
-    return std::string();
+    return ""std::string();""
 }
 
 FullBodyCustomer::FullBodyCustomer(std::string name, int id) : Customer(name, id) {
 
 }
 
+bool compareWorkoutByType(Workout &a, Workout &b){
+    return a.getType() > b.getType();
+}
+
 std::vector<int> FullBodyCustomer::order(const std::vector<Workout> &workout_options) {
-    return std::vector<int>();
+    vector<int> orders;
+    Workout minCardio = new Workout(-1,minCardio,0,MIXED);
+    Workout minAnaerobic = new Workout(-1,minCardio,0,MIXED);
+    Workout maxMixed = new Workout(-1,minCardio,0,MIXED);
+    for (vector<Workout>::iterator it = workout_options.begin(); it < workout_options.end(); it++){
+        if (it.getType() == CARDIO){
+            if (it.getPrice() < minCardio.getPrice() | (it.getPrice() == minCardio.getPrice() && it.getId() < minCardio.getId()))
+                minCardio = it;
+        }
+        if (it.getType() == ANAEROBIC){
+            if (it.getPrice() < minAnaerobic.getPrice() | (it.getPrice() == minAnaerobic.getPrice() && it.getId() < minAnaerobic.getId()))
+                minAnaerobic = it;
+        }
+        if (it.getType() == MIXED){
+            if (it.getPrice() < maxMixed.getPrice() | (it.getPrice() == maxMixed.getPrice() && it.getId() < maxMixed.getId()))
+                maxMixed = it;
+        }
+    }
+    if (minCardio.getId() != -1)
+        orders.push_back(minCardio.getId());
+    if (maxMixed.getId() != -1)
+        orders.push_back(maxMixed.getId());
+    if (minAnaerobic.getId() != -1)
+        orders.push_back(minAnaerobic.getId());
 }
 
 std::string FullBodyCustomer::toString() const {
