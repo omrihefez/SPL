@@ -17,6 +17,12 @@ public:
     Trainer* getTrainer(int tid);
 	const std::vector<BaseAction*>& getActionsLog() const; // Return a reference to the history of actions
     std::vector<Workout>& getWorkoutOptions();
+    bool isOpen();
+    virtual ~Studio(); //destructor
+    Studio (const Studio &other); //copy constructor
+    Studio& operator=(const Studio &other); //copy assignment operator
+    Studio(Studio &&other); //move constructor
+    Studio& operator=(Studio &&other); //move assignment operator
 
 private:
     static int numOfTrainers;
