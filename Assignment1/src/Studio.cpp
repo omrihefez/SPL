@@ -61,9 +61,9 @@ Studio::Studio(const std::string &configFilePath) {
                 case 1: {
                     string capacity = "";
                     for (int i = 0; i < line.length(); i++) {
-                        if (strcmp(line[i], ",") != 0  & strcmp(line[i], " ") != 0)
+                        if (line[i] != ','  & line[i] != ' ')
                             capacity += line[i];
-                        else if (strcmp(line[i], ",")) == 0) {
+                        else if (line[i] == ',') {
                             Trainer(stoi(capacity));
                             capacity = "";
                         }
@@ -123,7 +123,7 @@ void Studio::start() {
                 int firstSpace = s.find_first_of(" ");
                 int secondSpace = s.find_first_of(" ", firstSpace + 1);
                 int trainerId = stoi(s.substr(firstSpace, secondSpace));
-                Trainer *t = getTrainer(trainerId);
+                vector<Customer*> customersToAdd;
                 start = secondSpace + 1;
                 string customerName = "";
                 enum customerType {
@@ -149,27 +149,35 @@ void Studio::start() {
                     switch (ct) {
                         case (0): {
                             SweatyCustomer temp = SweatyCustomer(customerName, customerId);
+                            Customer* t = &temp;
                             customerId++;
-                            t->addCustomer(&temp);
+                            customersToAdd.push_back(t);
                         }
                         case (1): {
                             CheapCustomer temp = CheapCustomer(customerName, customerId);
+                            Customer* t = &temp;
                             customerId++;
-                            t->addCustomer(&temp);
+                            customersToAdd.push_back(t);
                         }
                         case (2): {
                             HeavyMuscleCustomer temp = HeavyMuscleCustomer(customerName, customerId);
+                            Customer* t = &temp;
                             customerId++;
-                            t->addCustomer(&temp);
+                            customersToAdd.push_back(t);
                         }
                         case (3): {
                             FullBodyCustomer temp = FullBodyCustomer(customerName, customerId);
+                            Customer* t = &temp;
                             customerId++;
-                            t->addCustomer(&temp);
+                            customersToAdd.push_back(t);
                         }
                     }
-                    start = index++;
+                    start = index + 3;
                 }
+                OpenTrainer o = OpenTrainer(trainerId, customersToAdd);
+                o.act(*this);
+                BaseAction* ba = &o;
+                actionsLog.push_back(ba);
                 s = "";
                 caseNumber = -1;
             }
@@ -179,6 +187,8 @@ void Studio::start() {
                     trainerId += s[i];
                 Order a = Order(stoi(trainerId));
                 a.act(*this);
+                BaseAction* ba = &a;
+                actionsLog.push_back(ba);
                 s = "";
                 caseNumber = -1;
             }
@@ -200,6 +210,8 @@ void Studio::start() {
                 }
                 MoveCustomer a = MoveCustomer(stoi(src), stoi(dst), stoi(customerId));
                 a.act(*this);
+                BaseAction* ba = &a;
+                actionsLog.push_back(ba);
                 s = "";
                 caseNumber = -1;
             }
@@ -207,6 +219,8 @@ void Studio::start() {
                 int trainerId = stoi(s.substr(6, s.length() - 1));
                 Close a = Close(trainerId);
                 a.act(*this);
+                BaseAction* ba = &a;
+                actionsLog.push_back(ba);
                 s = "";
                 caseNumber = -1;
             }
@@ -214,36 +228,48 @@ void Studio::start() {
                 int trainerId = stoi(s.substr(7, s.length() - 1));
                 PrintTrainerStatus a = PrintTrainerStatus(trainerId);
                 a.act(*this);
+                BaseAction* ba = &a;
+                actionsLog.push_back(ba);
                 s = "";
                 caseNumber = -1;
             }
             case (5): {
                 PrintWorkoutOptions a = PrintWorkoutOptions();
                 a.act(*this);
+                BaseAction* ba = &a;
+                actionsLog.push_back(ba);
                 s = "";
                 caseNumber = -1;
             }
             case (6): {
                 PrintActionsLog a = PrintActionsLog();
                 a.act(*this);
+                BaseAction* ba = &a;
+                actionsLog.push_back(ba);
                 s = "";
                 caseNumber = -1;
             }
             case (7): {
                 BackupStudio a = BackupStudio();
                 a.act(*this);
+                BaseAction* ba = &a;
+                actionsLog.push_back(ba);
                 s = "";
                 caseNumber = -1;
             }
             case (8): {
                 RestoreStudio a = RestoreStudio();
                 a.act(*this);
+                BaseAction* ba = &a;
+                actionsLog.push_back(ba);
                 s = "";
                 caseNumber = -1;
             }
             case (9): {
                 CloseAll a = CloseAll();
                 a.act(*this);
+                BaseAction* ba = &a;
+                actionsLog.push_back(ba);
                 open = false;
                 s = "";
                 caseNumber = -1;
@@ -283,13 +309,13 @@ Studio::~Studio(){
     open = false;
     if (!trainers.empty()){
         for (size_t i = 0; i < trainers.size(); i++)
-            delete *trainers[i];
+            delete trainers[i];
     }
     trainers.clear();
     workout_options.clear();
     if (!actionsLog.empty()){
         for (size_t i = 0; i < actionsLog.size(); i++)
-            delete *actionsLog[i];
+            delete actionsLog[i];
     }
     actionsLog.clear();
 }

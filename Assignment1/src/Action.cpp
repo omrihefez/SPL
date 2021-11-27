@@ -3,6 +3,7 @@
 //
 
 #include "../include/Action.h"
+#include "../include/Studio.h"
 using namespace std;
 extern Studio* backup;
 
@@ -12,22 +13,21 @@ ActionStatus BaseAction::getStatus() const {return status;}
 
 void BaseAction::complete() {status = COMPLETED;}
 
-void BaseAction::error(int errorMsg) {status = ERROR; this.errorMsg = errorMsg;}
+void BaseAction::error(std::string errorMsg) {status = ERROR; this->errorMsg = errorMsg;}
 
 OpenTrainer::OpenTrainer(int id, std::vector<Customer *> &customersList): BaseAction(),
 trainerId(id), customers(customersList) {}
 
 void OpenTrainer::act(Studio &studio) {
-    (studio.getActionLog).push_back(this);
     Trainer* t = studio.getTrainer(trainerId);
     if (t == nullptr || t->isOpen()){
         error("Workout session does not exist or is already open.");
     }
     else{
-        std::vector<Customer *>::iterator iter = customers.begin();
+        int i = 0;
         while (t->getCapacity()>0){
-            t->addCustomer(iter);
-            iter++;
+            t->addCustomer(customers[i]);
+            i++;
         }
     complete();
     }
@@ -45,18 +45,16 @@ std::string OpenTrainer::toString() const {
 Order::Order(int id): BaseAction(), trainerId(id) {}
 
 void Order::act(Studio &studio) {
-    (studio.getActionLog).push_back(this);
     Trainer* t = studio.getTrainer(trainerId);
     if (t == nullptr || !(t->isOpen())){
         error("Workout session does not exist or is already open.");
     }
     else{
         std::vector<Workout>& options = studio.getWorkoutOptions();
-        std::vector<Customer *>::iterator iter = (t->getCustomers()).begin();
-        while (iter != (t->getCustomers()).end()){
-            std::vector<int> o = iter->Customer::order();
-            t->order(iter.getId(), o, options);
-            }
+        for (size_t i = 0; i < t->getCustomers().size(); i++){
+            std::vector<int> o = t->getCustomers()[i]->order(options);
+            t->order(t->getCustomers()[i]->getId(), o, options);
+        }
         complete();
         }
 
@@ -70,7 +68,6 @@ MoveCustomer::MoveCustomer(int src, int dst, int customerId): BaseAction(), srcT
 dstTrainer(dst), id(customerId){}
 
 void MoveCustomer::act(Studio &studio) {
-    (studio.getActionLog).push_back(this);
     Trainer *sTrainer = studio.getTrainer(srcTrainer);
     Trainer *dTrainer = studio.getTrainer(dstTrainer);
     if (sTrainer == nullptr | dTrainer == nullptr ||
@@ -92,14 +89,13 @@ std::string MoveCustomer::toString() const {
 Close::Close(int id): BaseAction(), trainerId(id) {}
 
 void Close::act(Studio &studio) {
-    (studio.getActionLog).push_back(this);
     Trainer* t = studio.getTrainer(trainerId);
     if (t == nullptr || !(t->isOpen())) {
         error("Trainer does not exist or is not open");
     }
     else {
         t->closeTrainer();
-        cout << "Trainer " << id << " is closed. Salary " << t->getSalary() << "NIS" << endl;
+        cout << "Trainer " << trainerId << " is closed. Salary " << t->getSalary() << "NIS" << endl;
         complete();
     }
 }
@@ -111,12 +107,11 @@ std::string Close::toString() const {
 CloseAll::CloseAll(): BaseAction() {}
 
 void CloseAll::act(Studio &studio) {
-    (studio.getActionLog).push_back(this);
     int numOfTrainers = studio.getNumOfTrainers();
     for (int i = 0; i < numOfTrainers; i++){
         Trainer* t = studio.getTrainer(i);
         if (t->isOpen()) {
-            Close closeT = Close::Close(i);
+            Close closeT(i);
             closeT.act(studio);
         }
         delete t;
@@ -132,12 +127,9 @@ string CloseAll::toString() const {
 PrintWorkoutOptions::PrintWorkoutOptions(): BaseAction() {}
 
 void PrintWorkoutOptions::act(Studio &studio) {
-    (studio.getActionLog).push_back(this);
     std::vector<Workout>& options = studio.getWorkoutOptions();
-    std::vector<Workout>::iterator iter = options.begin();
-    while(iter != options.end()){
-        std::cout << iter.getName() << ", " << iter.getType << ", " << iter.getPrice << std::endl;
-        iter++;
+    for (size_t i = 0; i < options.size(); i++){
+        std::cout << options[i].getName() << ", " << options[i].getType() << ", " << options[i].getPrice() << std::endl;
     }
     complete();
 }
@@ -149,37 +141,34 @@ string PrintWorkoutOptions::toString() const {
 PrintTrainerStatus::PrintTrainerStatus(int id): BaseAction(), trainerId(id) {}
 
 void PrintTrainerStatus::act(Studio &studio) {
-    (studio.getActionLog()).push_back(this);
     Trainer* t = studio.getTrainer(trainerId);
     std::string status = t->isOpen() ? "open" : "closed";
     cout << "Trainer " << trainerId << " status: " << status << endl;
     if (t->isOpen()){
         cout << "Costumers:" << endl;
         vector<Customer*> &c = t->getCustomers();
-        for (std::vector<Customer*>::iterator i = c.begin(); i != c.end(); i++)
-            cout << i.getId() << " " << i.getName() << endl;
+        for (size_t i = 0; i < c.size(); i++)
+            cout << c[i]->getId() << " " << c[i]->getName() << endl;
         vector<OrderPair>& orders = t->getOrders();
-        for (std::vector<OrderPair>::iterator i = orders.begin(); int != orders.end(); i++){
-            cout << i.second.getName() << " " < i.second.getPrice() << "NIS " << i.first << endl;
-        }
+        for (size_t i = 0; i < orders.size(); i++)
+            cout << orders[i].second.getName() << " " << orders[i].second.getPrice() << "NIS " << orders[i].first << endl;
         cout << "Current Trainer's Salary: " << t->getSalary() <<"NIS" << endl;
     }
     complete();
 }
 
-int PrintTrainerStatus::toString() const {
+std::string PrintTrainerStatus::toString() const {
         return "status " + trainerId;
     }
 
 PrintActionsLog::PrintActionsLog(): BaseAction() {}
 
 void PrintActionsLog::act(Studio &studio) {
-    std::vector<BaseAction*>& log = studio.getActionsLog();
-    for (std::vector<BaseAction*>::iterator i = log.begin(); i != log.end(); i++){
-        string status = i.getStatus() == COMPLETED ? "Completed" : "Error: " + i.getErrorMsg();
-        cout << i->toString() << " " << status << endl;
+    const std::vector<BaseAction*>& log = studio.getActionsLog();
+    for (size_t i = 0; i < log.size(); i++){
+        string status = log[i]->getStatus() == COMPLETED ? "Completed" : "Error: " + log[i]->getErrorMsg();
+        cout << log[i]->toString() << " " << status << endl;
     }
-    (studio.getActionLog).push_back(this);
     complete();
 }
 
@@ -188,8 +177,7 @@ string PrintActionsLog::toString() const {return "log";}
 BackupStudio::BackupStudio(): BaseAction() {}
 
 void BackupStudio::act(Studio &studio) {
-    (studio.getActionLog).push_back(this);
-    backup = studio;
+    backup = &studio;
     complete();
 }
 
@@ -198,7 +186,6 @@ string BackupStudio::toString() const {return "backup";}
 RestoreStudio::RestoreStudio(): BaseAction() {}
 
 void RestoreStudio::act(Studio &studio) {
-    (studio.getActionLog).push_back(this);
     if (backup == nullptr)
         error("No backup available");
     else {

@@ -1,0 +1,1 @@
+/usr/bin/c++ -g CMakeFiles/superlib.dir/src/main.cpp.o CMakeFiles/superlib.dir/src/Customer.cpp.o CMakeFiles/superlib.dir/src/Studio.cpp.o CMakeFiles/superlib.dir/src/Trainer.cpp.o CMakeFiles/superlib.dir/src/Workout.cpp.o CMakeFiles/superlib.dir/src/Action.cpp.o -o superlib 
