@@ -1,0 +1,1 @@
+/usr/bin/c++ -g CMakeFiles/SPL1.dir/src/main.cpp.o CMakeFiles/SPL1.dir/src/Customer.cpp.o CMakeFiles/SPL1.dir/src/Studio.cpp.o CMakeFiles/SPL1.dir/src/Trainer.cpp.o CMakeFiles/SPL1.dir/src/Workout.cpp.o CMakeFiles/SPL1.dir/src/Action.cpp.o -o SPL1 
