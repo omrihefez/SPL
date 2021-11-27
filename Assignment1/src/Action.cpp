@@ -166,7 +166,7 @@ PrintActionsLog::PrintActionsLog(): BaseAction() {}
 void PrintActionsLog::act(Studio &studio) {
     const std::vector<BaseAction*>& log = studio.getActionsLog();
     for (size_t i = 0; i < log.size(); i++){
-        string status = log[i]->getStatus() == COMPLETED ? "Completed" : "Error: " + log[i]->getErrorMsg();
+        string status = log[i]->getStatus() == COMPLETED ? "Completed" : "Error: "; //+ log[i]->getErrorMsg();
         cout << log[i]->toString() << " " << status << endl;
     }
     complete();
@@ -189,12 +189,12 @@ void RestoreStudio::act(Studio &studio) {
     if (backup == nullptr)
         error("No backup available");
     else {
-        studio = backup;
+        //studio = backup;
         complete();
     }
 }
 
-string RestoreStudio::toString() const {return "restore";}
+std::string RestoreStudio::toString() const {return "restore";}
 
 
 

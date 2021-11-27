@@ -25,7 +25,6 @@ public:
     Studio& operator=(Studio &&other); //move assignment operator
 
 private:
-    static int numOfTrainers;
     bool open;
     std::vector<Trainer*> trainers;
     std::vector<Workout> workout_options;

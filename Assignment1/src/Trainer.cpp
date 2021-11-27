@@ -6,9 +6,9 @@
 #include <iostream>
 
 using namespace std;
-int idCounter = 0;
+static int idCounter = 0;
 
-Trainer::Trainer (int t_capacity) : id(idCounter++), capacity(t_capacity), open(false), salary(0), origCapacity(t_capacity) {}
+Trainer::Trainer (int t_capacity) : id(idCounter), capacity(t_capacity), open(false), salary(0), origCapacity(t_capacity) {idCounter++;}
 
 // Copy Constructor
 Trainer::Trainer( Trainer &other) {
@@ -31,7 +31,7 @@ void Trainer::copy(int &other_capacity, bool &other_open, int &other_id, int &ot
 // Copy Assignment
 Trainer& Trainer::operator=(Trainer& other) {
     if (this != &other) {
-        clear();
+        //clear();
         copy(other.capacity, other.open, other.id, other.salary, other.origCapacity,other.customersList,other.orderList);
     }
     return *this;
@@ -65,12 +65,13 @@ Trainer::Trainer(Trainer&& other)
 // Move Assignment
 Trainer& Trainer::operator=(Trainer &&other){
 
-  for (size_t i=0 ; i < customersList.size() ; i++) {
+  for (size_t i=0 ; i < other.customersList.size() ; i++) {
       customersList.push_back(other.customersList[i]);
 //      delete (other.customersList[i]);
   }
   other.customersList.clear();
-  orderList = other.orderList;
+  for (size_t i = 0; i < other.orderList.size(); i++)
+      orderList.push_back(other.orderList[i]);
   other.orderList.clear();
   capacity = other.capacity;
   open = other.open;
@@ -102,8 +103,17 @@ void Trainer::removeCustomer(int id) {
     for (size_t j=0 ; j < orderList.size() ; j++)
         if (orderList[j].first == id){
             salary -= orderList[j].second.getPrice();
-            orderList.erase(orderList.begin()+j);
+            vector<OrderPair> temp;
+            for (size_t i = 0; i < orderList.size(); i++)
+                if (i != j)
+                    temp.push_back(orderList[i]);
+            orderList.clear();
+            for (size_t i = 0; i < temp.size(); i++)
+                orderList.push_back(temp[i]);
+            temp.clear();
         }
+    if (customersList.empty())
+        closeTrainer();
 }
 
 Customer *Trainer::getCustomer(int id) {

@@ -1,26 +1,18 @@
-CXX = g++
-CXXFLAGS = -g -Wall -std=c++11
-CPPFLAGS = -I ./include -MMD -MP
+all: link
 
-SRCS = $(wildcard ./src/*.cpp)
-OBJS = $(patsubst ./src/%.cpp,./bin/%.o, $(SRCS))
-DEPS := $(patsubst %.o,%.d, $(OBJS))
+link: compile
+	@echo "linking Object files"
+	g++ -o bin/Studio bin/main.o bin/Studio.o bin/Action.o bin/Customer.o bin/Trainer.o bin/Workout.o
 
-# default target
-all: ./bin/studio
+compile: src/main.cpp src/Studio.cpp src/Action.cpp src/Workout.cpp src/Trainer.cpp src/Customer.cpp
+	@echo "compiling source code"
+	g++ -g -c -Wall -Weffc++ -std=c++11 -o bin/main.o src/main.cpp
+	g++ -g -c -Wall -Weffc++ -std=c++11 -o bin/Action.o src/Action.cpp
+	g++ -g -c -Wall -Weffc++ -std=c++11 -o bin/Studio.o src/Studio.cpp
+	g++ -g -c -Wall -Weffc++ -std=c++11 -o bin/Customer.o src/Customer.cpp
+	g++ -g -c -Wall -Weffc++ -std=c++11 -o bin/Trainer.o src/Trainer.cpp
+	g++ -g -c -Wall -Weffc++ -std=c++11 -o bin/Workout.o src/Workout.cpp
 
-# build studio
-./bin/studio: $(OBJS)
-	@echo "Building ..."
-	$(CXX) $(OBJS) -o $@
-	@echo "Finished building"
-
-# build cpp files
-./bin/%.o: ./src/%.cpp
-	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
-
-# clean build files
 clean:
-	@rm -f ./bin/*
-
--include $(DEPS)
+	@echo "cleaning bin directory"
+	rm -rf bin/*

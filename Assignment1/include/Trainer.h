@@ -30,7 +30,6 @@ public:
     bool isOpen();
 private:
     int id;
-    static int idCounter;
     int capacity;
     bool open;
     int salary;

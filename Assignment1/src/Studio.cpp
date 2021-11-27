@@ -54,7 +54,7 @@ Studio::Studio(const std::string &configFilePath) {
                     string _numOfTrainers = "";
                     for (int i = 0; i < line.length(); i++)
                         _numOfTrainers += line[i];
-                    numOfTrainers = stoi(_numOfTrainers);
+                    //numOfTrainers = stoi(_numOfTrainers);
                     lineNumber++;
                     break;
                 }
@@ -323,7 +323,7 @@ Studio::~Studio(){
 //copy constructor
 Studio::Studio (const Studio &other): Studio() {
     vector<Trainer*> trainersOfOther = other.trainers;
-    for (int i = 0; i < numOfTrainers; i++){
+    for (size_t i = 0; i < trainersOfOther.size(); i++){
         Trainer t = *trainersOfOther[i];
         trainers.push_back(&t);
     }
@@ -344,7 +344,7 @@ Studio &Studio::operator=(const Studio &other) {
     open = other.open;
     trainers.clear();
     vector<Trainer*> trainersOfOther = other.trainers;
-    for (int i = 0; i < numOfTrainers; i++){
+    for (int i = 0; i < trainersOfOther.size(); i++){
         Trainer t = *trainersOfOther[i];
         trainers.push_back(&t);
     }
