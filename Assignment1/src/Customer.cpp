@@ -40,7 +40,7 @@ std::vector<int> CheapCustomer::order(const std::vector<Workout> &workout_option
     int cheapestPrice = -1;
     int idToReturn = -1;
     for (size_t i = 0; i < workout_options.size(); i++){
-        if ((workout_options[i].getPrice() < cheapestPrice) | ((workout_options[i].getPrice() == cheapestPrice) & (workout_options[i].getId() < idToReturn))){
+        if ((workout_options[i].getPrice() < cheapestPrice) || ((workout_options[i].getPrice() == cheapestPrice) & (workout_options[i].getId() < idToReturn))){
             idToReturn = workout_options[i].getId();
             cheapestPrice = workout_options[i].getPrice();
         }

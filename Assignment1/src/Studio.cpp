@@ -195,6 +195,7 @@ void Studio::start() {
                 actionsLog.push_back(ba);
                 s = "";
                 caseNumber = -1;
+                break;
             }
             case (1): {
                 string trainerId = "";
@@ -206,6 +207,7 @@ void Studio::start() {
                 actionsLog.push_back(ba);
                 s = "";
                 caseNumber = -1;
+                break;
             }
             case (2): {
                 string src = "";
@@ -229,6 +231,7 @@ void Studio::start() {
                 actionsLog.push_back(ba);
                 s = "";
                 caseNumber = -1;
+                break;
             }
             case (3): {
                 int trainerId = stoi(s.substr(6, s.length() - 1));
@@ -238,6 +241,7 @@ void Studio::start() {
                 actionsLog.push_back(ba);
                 s = "";
                 caseNumber = -1;
+                break;
             }
             case (4): {
                 int trainerId = stoi(s.substr(7, s.length() - 1));
@@ -247,6 +251,7 @@ void Studio::start() {
                 actionsLog.push_back(ba);
                 s = "";
                 caseNumber = -1;
+                break;
             }
             case (5): {
                 PrintWorkoutOptions a = PrintWorkoutOptions();
@@ -255,6 +260,7 @@ void Studio::start() {
                 actionsLog.push_back(ba);
                 s = "";
                 caseNumber = -1;
+                break;
             }
             case (6): {
                 PrintActionsLog a = PrintActionsLog();
@@ -263,6 +269,7 @@ void Studio::start() {
                 actionsLog.push_back(ba);
                 s = "";
                 caseNumber = -1;
+                break;
             }
             case (7): {
                 BackupStudio a = BackupStudio();
@@ -271,6 +278,7 @@ void Studio::start() {
                 actionsLog.push_back(ba);
                 s = "";
                 caseNumber = -1;
+                break;
             }
             case (8): {
                 RestoreStudio a = RestoreStudio();
@@ -279,6 +287,7 @@ void Studio::start() {
                 actionsLog.push_back(ba);
                 s = "";
                 caseNumber = -1;
+                break;
             }
             case (9): {
                 CloseAll a = CloseAll();
@@ -288,6 +297,7 @@ void Studio::start() {
                 open = false;
                 s = "";
                 caseNumber = -1;
+                break;
             }
 
         }

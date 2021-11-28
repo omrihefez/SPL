@@ -24,8 +24,9 @@ void OpenTrainer::act(Studio &studio) {
         error("Workout session does not exist or is already open.");
     }
     else{
+        t->openTrainer();
         int i = 0;
-        while (t->getCapacity()>0 & (size_t)i < customers.size()){
+        while (t->getCapacity()>0 & i < customers.size()){
             t->addCustomer(customers[i]);
             i++;
         }
@@ -54,6 +55,9 @@ void Order::act(Studio &studio) {
         for (size_t i = 0; i < t->getCustomers().size(); i++){
             std::vector<int> o = t->getCustomers()[i]->order(options);
             t->order(t->getCustomers()[i]->getId(), o, options);
+        }
+        for (size_t i = 0; i < t->getOrders().size(); i++){
+            cout << t->getCustomer(t->getOrders()[i].first)->getName() << " Is Doing " << t->getOrders()[i].second.getName() << endl;
         }
         complete();
         }
@@ -149,6 +153,7 @@ void PrintTrainerStatus::act(Studio &studio) {
         vector<Customer*> &c = t->getCustomers();
         for (size_t i = 0; i < c.size(); i++)
             cout << c[i]->getId() << " " << c[i]->getName() << endl;
+        cout << "Orders:" << endl;
         vector<OrderPair>& orders = t->getOrders();
         for (size_t i = 0; i < orders.size(); i++)
             cout << orders[i].second.getName() << " " << orders[i].second.getPrice() << "NIS " << orders[i].first << endl;
