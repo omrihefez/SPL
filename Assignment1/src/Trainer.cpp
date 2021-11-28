@@ -38,7 +38,11 @@ Trainer& Trainer::operator=(Trainer& other) {
 }
 
 // Destructor
-Trainer::~Trainer() { customersList.clear(); }
+Trainer::~Trainer() {
+    for (size_t i = 0; i < customersList.size(); i++)
+        delete customersList[i];
+    customersList.clear();
+}
 
 //void Trainer::clear() {
 //    if (!customersList.empty())
@@ -94,30 +98,37 @@ void Trainer::addCustomer(Customer *customer) {
 }
 
 void Trainer::removeCustomer(int id) {
-    for (int i=0 ; i < customersList.size() ; i++)
+    for (size_t i = 0 ; i < customersList.size() ; i++)
         if (customersList[i]->getId() == id) {
-//            delete(customersList[i]);
             customersList.erase(customersList.begin() + i);
             capacity++;
         }
-    for (size_t j=0 ; j < orderList.size() ; j++)
-        if (orderList[j].first == id){
-            salary -= orderList[j].second.getPrice();
-            vector<OrderPair> temp;
-            for (size_t i = 0; i < orderList.size(); i++)
-                if (i != j)
-                    temp.push_back(orderList[i]);
-            orderList.clear();
-            for (size_t i = 0; i < temp.size(); i++)
-                orderList.push_back(temp[i]);
-            temp.clear();
-        }
+    removeOrdersOfCustomerById(id);
+//    for (size_t j=0 ; j < orderList.size() ; j++)
+//        if (orderList[j].first == id){
+//            salary -= orderList[j].second.getPrice();
+//            vector<OrderPair> temp;
+//            for (size_t i = 0; i < orderList.size(); i++)
+//                if (i != j)
+//                    temp.push_back(orderList[i]);
+//            orderList.clear();
+//            for (size_t i = 0; i < temp.size(); i++)
+//                orderList.push_back(temp[i]);
+//            temp.clear();
+//        }
     if (customersList.empty())
         closeTrainer();
 }
 
+void Trainer::addOrdersAfterMove(std::vector<OrderPair> v){
+    for (size_t i = 0 ; i < v.size(); i++){
+        orderList.push_back(v[i]);
+        salary += v[i].second.getPrice();
+    }
+}
+
 Customer *Trainer::getCustomer(int id) {
-    for (int i=0 ; i< customersList.size() ; i++)
+    for (size_t i = 0 ; i< customersList.size() ; i++)
         if (customersList[i]->getId() == id)
             return customersList[i];
     return nullptr;
@@ -131,8 +142,25 @@ std::vector<OrderPair> &Trainer::getOrders() {
     return orderList;
 }
 
-void
-Trainer::order(const int customer_id, const std::vector<int> workout_ids, const std::vector<Workout> &workout_options) {
+std::vector<OrderPair> Trainer::removeOrdersOfCustomerById(int customerId) {
+    std::vector<OrderPair> temp;
+    std::vector<OrderPair> toReturn;
+    for (size_t i = 0; i < orderList.size(); i++){
+        if (orderList[i].first != customerId)
+            temp.push_back(orderList[i]);
+        else {
+            salary -= orderList[i].second.getPrice();
+            toReturn.push_back(orderList[i]);
+        }
+    }
+    orderList.clear();
+    for (size_t i = 0; i < temp.size(); i++){
+        orderList.push_back(temp[i]);
+    }
+    return toReturn;
+}
+
+void Trainer::order(const int customer_id, const std::vector<int> workout_ids, const std::vector<Workout> &workout_options) {
     for (size_t i=0 ; i < workout_ids.size() ; i++){
         orderList.push_back(make_pair(customer_id,workout_options[workout_ids[i]]));
         salary += workout_options[workout_ids[i]].getPrice();
