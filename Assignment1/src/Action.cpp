@@ -25,7 +25,7 @@ void OpenTrainer::act(Studio &studio) {
     }
     else{
         int i = 0;
-        while (t->getCapacity()>0){
+        while (t->getCapacity()>0 & (size_t)i < customers.size()){
             t->addCustomer(customers[i]);
             i++;
         }

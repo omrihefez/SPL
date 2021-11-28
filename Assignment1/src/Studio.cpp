@@ -17,7 +17,7 @@ int customerId = 0;
 
 Studio::Studio(): open(false) {}
 
-void buildWorkout(int id, string _line) {
+Workout buildWorkout(int id, string _line) {
     string workoutName;
     string workoutType;
     WorkoutType type;
@@ -39,7 +39,7 @@ void buildWorkout(int id, string _line) {
     for (index; index < _line.length(); index++)
         priceString += _line[index];
     price = stoi(priceString);
-    Workout(id, workoutName, price, type);
+    return Workout(id, workoutName, price, type);
 }
 
 Studio::Studio(const std::string &configFilePath) {
@@ -60,16 +60,18 @@ Studio::Studio(const std::string &configFilePath) {
                 }
                 case 1: {
                     string capacity = "";
-                    for (int i = 0; i < line.length(); i++) {
-                        if (line[i] != ','  & line[i] != ' ') {
+                    for (int i = 0; i <= line.length(); i++) {
+                        if (i < line.length() && line[i] != ','  & line[i] != ' ') {
                             capacity += line[i];
-                        } else {
+                        }
+                        else {
                             int n = 0;
                             stringstream j(capacity);
                             j >> n;
                             int tId = n;
                             Trainer *t = new Trainer(tId);
                             trainers.push_back(t);
+                            t = nullptr;
                             capacity = "";
                         }
                     }
@@ -78,10 +80,10 @@ Studio::Studio(const std::string &configFilePath) {
                 }
                 case 2: {
                     int id = 0;
-                    buildWorkout(id, line);
+                    workout_options.push_back(buildWorkout(id, line));
                     id++;
-                    while (getline(f, line)) {
-                        buildWorkout(id, line);
+                    while (getline(f, line) && line != "") {
+                        workout_options.push_back(buildWorkout(id, line));
                         id++;
                     }
                     break;
@@ -98,7 +100,7 @@ void Studio::start() {
     cout << "Studio is now open!" << endl;
     string s;
     while (open) {
-        std::cin >> s;
+        getline(cin, s);
         int caseNumber;
         if (s.substr(0, s.find_first_of(" ")) == "open")
             caseNumber = 0;
@@ -128,7 +130,7 @@ void Studio::start() {
                 int firstSpace = s.find_first_of(" ");
                 int secondSpace = s.find_first_of(" ", firstSpace + 1);
                 int trainerId = stoi(s.substr(firstSpace, secondSpace));
-                vector<Customer*> customersToAdd;
+                std::vector<Customer *> customersToAdd;
                 start = secondSpace + 1;
                 string customerName = "";
                 enum customerType {
@@ -137,7 +139,7 @@ void Studio::start() {
                 customerType ct;
                 for (start; (size_t)start < s.length(); start++) {
                     int index = start;
-                    while (strcmp(&s[index], ",") != 0) {
+                    while (s[index] != ',') {
                         customerName += s[index];
                         index++;
                     }
@@ -153,28 +155,36 @@ void Studio::start() {
                         ct = fbd;
                     switch (ct) {
                         case (0): {
-                            SweatyCustomer temp = SweatyCustomer(customerName, customerId);
-                            Customer* t = &temp;
+                            SweatyCustomer* temp = new SweatyCustomer(customerName, customerId);
                             customerId++;
-                            customersToAdd.push_back(t);
+                            customersToAdd.push_back(temp);
+                            temp = nullptr;
+                            customerName = "";
+                            break;
                         }
                         case (1): {
-                            CheapCustomer temp = CheapCustomer(customerName, customerId);
-                            Customer* t = &temp;
+                            CheapCustomer* temp = new CheapCustomer(customerName, customerId);
                             customerId++;
-                            customersToAdd.push_back(t);
+                            customersToAdd.push_back(temp);
+                            temp = nullptr;
+                            customerName = "";
+                            break;
                         }
                         case (2): {
-                            HeavyMuscleCustomer temp = HeavyMuscleCustomer(customerName, customerId);
-                            Customer* t = &temp;
+                            HeavyMuscleCustomer* temp = new HeavyMuscleCustomer(customerName, customerId);
                             customerId++;
-                            customersToAdd.push_back(t);
+                            customersToAdd.push_back(temp);
+                            temp = nullptr;
+                            customerName = "";
+                            break;
                         }
                         case (3): {
-                            FullBodyCustomer temp = FullBodyCustomer(customerName, customerId);
-                            Customer* t = &temp;
+                            FullBodyCustomer* temp = new FullBodyCustomer(customerName, customerId);
                             customerId++;
-                            customersToAdd.push_back(t);
+                            customersToAdd.push_back(temp);
+                            temp = nullptr;
+                            customerName = "";
+                            break;
                         }
                     }
                     start = index + 3;
