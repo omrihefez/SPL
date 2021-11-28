@@ -79,9 +79,10 @@ void MoveCustomer::act(Studio &studio) {
         error("Cannot move customer.");
     else {
         Customer *c = sTrainer->getCustomer(id);
+        vector<OrderPair> toAdd = sTrainer->removeOrdersOfCustomerById(id);
         sTrainer->removeCustomer(id);
-
         dTrainer->addCustomer(c);
+        dTrainer->addOrdersAfterMove(toAdd);
         complete();
     }
 }
@@ -118,10 +119,8 @@ void CloseAll::act(Studio &studio) {
             Close closeT(i);
             closeT.act(studio);
         }
-        delete t;
-        t = nullptr;
-        complete();
     }
+    complete();
 }
 
 string CloseAll::toString() const {

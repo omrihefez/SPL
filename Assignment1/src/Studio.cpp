@@ -125,7 +125,7 @@ void Studio::start() {
 
 
         switch (caseNumber) {
-            case (0): {
+            case (0): { //open trainer
                 int start = 0;
                 int firstSpace = s.find_first_of(" ");
                 int secondSpace = s.find_first_of(" ", firstSpace + 1);
@@ -191,59 +191,69 @@ void Studio::start() {
                 }
                 OpenTrainer o = OpenTrainer(trainerId, customersToAdd);
                 o.act(*this);
+                if (o.getStatus() == ERROR)
+                    cout << "Error: Workout session does not exist or is already open." << endl;
                 BaseAction* ba = &o;
                 actionsLog.push_back(ba);
                 s = "";
                 caseNumber = -1;
                 break;
             }
-            case (1): {
+            case (1): { //order
                 string trainerId = "";
                 for (size_t i = s.find_first_of(" ") + 1; i < s.length(); i++)
                     trainerId += s[i];
                 Order a = Order(stoi(trainerId));
                 a.act(*this);
+                if (a.getStatus() == ERROR)
+                    cout << "Error: Workout session does not exist or is already open." << endl;
                 BaseAction* ba = &a;
                 actionsLog.push_back(ba);
                 s = "";
                 caseNumber = -1;
                 break;
             }
-            case (2): {
+            case (2): { //move customer
                 string src = "";
                 string dst = "";
                 string customerId = "";
                 int start = s.find_first_of(" ") + 1;
-                for (size_t i = start; i < s.length() && strcmp(&s[i], " ") != 0; i++) {
+                for (size_t i = start; i < s.length() && s[i] != ' '; i++) {
                     src += s[i];
                     start++;
                 }
-                for (size_t i = start++; i < s.length() && strcmp(&s[i], " ") != 0 ; i++) {
+                start++;
+                for (size_t i = start; i < s.length() && s[i] != ' ' ; i++) {
                     dst += s[i];
                     start++;
                 }
-                for (size_t i = start++; i < s.length(); i++) {
+                start++;
+                for (size_t i = start; i < s.length(); i++) {
                     customerId += s[i];
                 }
                 MoveCustomer a = MoveCustomer(stoi(src), stoi(dst), stoi(customerId));
                 a.act(*this);
+                if (a.getStatus() == ERROR)
+                    cout << "Cannot move customer." << endl;
                 BaseAction* ba = &a;
                 actionsLog.push_back(ba);
                 s = "";
                 caseNumber = -1;
                 break;
             }
-            case (3): {
+            case (3): { // close trainer
                 int trainerId = stoi(s.substr(6, s.length() - 1));
                 Close a = Close(trainerId);
                 a.act(*this);
+                if (a.getStatus() == ERROR)
+                    cout << "Error: Trainer does not exist or is not open" << endl;
                 BaseAction* ba = &a;
                 actionsLog.push_back(ba);
                 s = "";
                 caseNumber = -1;
                 break;
             }
-            case (4): {
+            case (4): { // print trainer status
                 int trainerId = stoi(s.substr(7, s.length() - 1));
                 PrintTrainerStatus a = PrintTrainerStatus(trainerId);
                 a.act(*this);
@@ -253,7 +263,7 @@ void Studio::start() {
                 caseNumber = -1;
                 break;
             }
-            case (5): {
+            case (5): { // print workout options
                 PrintWorkoutOptions a = PrintWorkoutOptions();
                 a.act(*this);
                 BaseAction* ba = &a;
@@ -262,7 +272,7 @@ void Studio::start() {
                 caseNumber = -1;
                 break;
             }
-            case (6): {
+            case (6): { // print action log
                 PrintActionsLog a = PrintActionsLog();
                 a.act(*this);
                 BaseAction* ba = &a;
@@ -271,7 +281,7 @@ void Studio::start() {
                 caseNumber = -1;
                 break;
             }
-            case (7): {
+            case (7): { // backup studio
                 BackupStudio a = BackupStudio();
                 a.act(*this);
                 BaseAction* ba = &a;
@@ -280,16 +290,18 @@ void Studio::start() {
                 caseNumber = -1;
                 break;
             }
-            case (8): {
+            case (8): { // restore studio
                 RestoreStudio a = RestoreStudio();
                 a.act(*this);
+                if (a.getStatus() == ERROR)
+                    cout << "Error: No backup available" << endl;
                 BaseAction* ba = &a;
                 actionsLog.push_back(ba);
                 s = "";
                 caseNumber = -1;
                 break;
             }
-            case (9): {
+            case (9): { // close all
                 CloseAll a = CloseAll();
                 a.act(*this);
                 BaseAction* ba = &a;

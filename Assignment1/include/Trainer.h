@@ -23,6 +23,8 @@ public:
     Customer* getCustomer(int id);
     std::vector<Customer*>& getCustomers();
     std::vector<OrderPair>& getOrders();
+    std::vector<OrderPair> removeOrdersOfCustomerById(int customerId);
+    void addOrdersAfterMove(std::vector<OrderPair> v);
     void order(const int customer_id, const std::vector<int> workout_ids, const std::vector<Workout>& workout_options);
     void openTrainer();
     void closeTrainer();
