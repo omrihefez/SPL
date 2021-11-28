@@ -9,6 +9,7 @@ using namespace std;
 #include <fstream>
 #include <algorithm>
 #include <cstring>
+#include <sstream>
 #include "../include/Studio.h"
 
 int customerId = 0;
@@ -43,28 +44,32 @@ void buildWorkout(int id, string _line) {
 
 Studio::Studio(const std::string &configFilePath) {
     open = false;
-    string line;
-    fstream f(configFilePath);
+    string line = "";
+    ifstream f(configFilePath);
     int lineNumber = 0;
     while (getline(f, line)) {
         if (line[0] == '#'){
             (getline(f, line));
             switch (lineNumber) {
                 case 0: {
-                    string _numOfTrainers = "";
-                    for (int i = 0; i < line.length(); i++)
-                        _numOfTrainers += line[i];
-                    //numOfTrainers = stoi(_numOfTrainers);
+//                    string _numOfTrainers = "";
+//                    for (int i = 0; i < line.length(); i++)
+//                        _numOfTrainers += line[i];
                     lineNumber++;
                     break;
                 }
                 case 1: {
                     string capacity = "";
                     for (int i = 0; i < line.length(); i++) {
-                        if (line[i] != ','  & line[i] != ' ')
+                        if (line[i] != ','  & line[i] != ' ') {
                             capacity += line[i];
-                        else if (line[i] == ',') {
-                            Trainer(stoi(capacity));
+                        } else {
+                            int n = 0;
+                            stringstream j(capacity);
+                            j >> n;
+                            int tId = n;
+                            Trainer *t = new Trainer(tId);
+                            trainers.push_back(t);
                             capacity = "";
                         }
                     }
