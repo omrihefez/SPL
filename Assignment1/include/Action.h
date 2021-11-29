@@ -18,6 +18,7 @@ public:
     ActionStatus getStatus() const;
     virtual void act(Studio& studio)=0;
     virtual std::string toString() const=0;
+    virtual ~BaseAction();
 protected:
     void complete();
     void error(std::string errorMsg);
@@ -33,6 +34,7 @@ public:
     OpenTrainer(int id, std::vector<Customer *> &customersList);
     void act(Studio &studio);
     std::string toString() const;
+    virtual ~OpenTrainer();
 private:
 	const int trainerId;
 	std::vector<Customer *> customers;
@@ -44,6 +46,7 @@ public:
     Order(int id);
     void act(Studio &studio);
     std::string toString() const;
+    virtual ~Order();
 private:
     const int trainerId;
 };
@@ -54,6 +57,7 @@ public:
     MoveCustomer(int src, int dst, int customerId);
     void act(Studio &studio);
     std::string toString() const;
+    virtual ~MoveCustomer();
 private:
     const int srcTrainer;
     const int dstTrainer;
@@ -66,6 +70,7 @@ public:
     Close(int id);
     void act(Studio &studio);
     std::string toString() const;
+    virtual ~Close();
 private:
     const int trainerId;
 };
@@ -76,6 +81,7 @@ public:
     CloseAll();
     void act(Studio &studio);
     std::string toString() const;
+    virtual ~CloseAll();
 private:
 };
 
@@ -85,6 +91,7 @@ public:
     PrintWorkoutOptions();
     void act(Studio &studio);
     std::string toString() const;
+    ~PrintWorkoutOptions();
 private:
 };
 
@@ -94,6 +101,7 @@ public:
     PrintTrainerStatus(int id);
     void act(Studio &studio);
     std::string toString() const;
+    ~PrintTrainerStatus();
 private:
     const int trainerId;
 };
@@ -104,6 +112,7 @@ public:
     PrintActionsLog();
     void act(Studio &studio);
     std::string toString() const;
+    ~PrintActionsLog();
 private:
 };
 
@@ -113,6 +122,7 @@ public:
     BackupStudio();
     void act(Studio &studio);
     std::string toString() const;
+    ~BackupStudio();
 private:
 };
 
@@ -122,6 +132,7 @@ public:
     RestoreStudio();
     void act(Studio &studio);
     std::string toString() const;
+    ~RestoreStudio();
 
 };
 

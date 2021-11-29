@@ -15,6 +15,12 @@ void BaseAction::complete() {status = COMPLETED;}
 
 void BaseAction::error(std::string errorMsg) {status = ERROR; this->errorMsg = errorMsg;}
 
+std::string BaseAction::getErrorMsg() const {
+    return errorMsg;
+}
+
+BaseAction::~BaseAction() {}
+
 OpenTrainer::OpenTrainer(int id, std::vector<Customer *> &customersList): BaseAction(),
 trainerId(id), customers(customersList) {}
 
@@ -40,12 +46,13 @@ std::string OpenTrainer::toString() const {
     for(int i=0 ; i < customers.size() ; i++)
         s += " " + customers[i]->toString();
     if (getStatus() == COMPLETED)
-        return s + " Completed";
-    else {
-        const string s1 = s + " Error: " + getErrorMsg();
-        return s1;
-    }
+        s =+ " Completed";
+    else
+        s += " Error: " + getErrorMsg();
+    return s;
 }
+
+OpenTrainer::~OpenTrainer() {}
 
 Order::Order(int id): BaseAction(), trainerId(id) {}
 
@@ -77,6 +84,8 @@ std::string Order::toString() const {
     return s;
 }
 
+Order::~Order() {}
+
 MoveCustomer::MoveCustomer(int src, int dst, int customerId): BaseAction(), srcTrainer(src),
 dstTrainer(dst), id(customerId){}
 
@@ -105,6 +114,8 @@ std::string MoveCustomer::toString() const {
     return s;
 }
 
+MoveCustomer::~MoveCustomer() {}
+
 Close::Close(int id): BaseAction(), trainerId(id) {}
 
 void Close::act(Studio &studio) {
@@ -128,6 +139,8 @@ std::string Close::toString() const {
     return s;
 }
 
+Close::~Close() {}
+
 CloseAll::CloseAll(): BaseAction() {}
 
 void CloseAll::act(Studio &studio) {
@@ -146,6 +159,8 @@ string CloseAll::toString() const {
     return "closeall Completed";
 }
 
+CloseAll::~CloseAll() {}
+
 PrintWorkoutOptions::PrintWorkoutOptions(): BaseAction() {}
 
 void PrintWorkoutOptions::act(Studio &studio) {
@@ -159,6 +174,8 @@ void PrintWorkoutOptions::act(Studio &studio) {
 string PrintWorkoutOptions::toString() const {
     return "workout_options Completed";
 }
+
+PrintWorkoutOptions::~PrintWorkoutOptions() {}
 
 PrintTrainerStatus::PrintTrainerStatus(int id): BaseAction(), trainerId(id) {}
 
@@ -181,8 +198,10 @@ void PrintTrainerStatus::act(Studio &studio) {
 }
 
 std::string PrintTrainerStatus::toString() const {
-        return "status " + std::to_string(trainerId) + " Completed";
-    }
+    return "status " + std::to_string(trainerId) + " Completed";
+}
+
+PrintTrainerStatus::~PrintTrainerStatus() {}
 
 PrintActionsLog::PrintActionsLog(): BaseAction() {}
 
@@ -197,6 +216,8 @@ void PrintActionsLog::act(Studio &studio) {
 
 string PrintActionsLog::toString() const {return "log Completed";}
 
+PrintActionsLog::~PrintActionsLog() {}
+
 BackupStudio::BackupStudio(): BaseAction() {}
 
 void BackupStudio::act(Studio &studio) {
@@ -205,6 +226,8 @@ void BackupStudio::act(Studio &studio) {
 }
 
 string BackupStudio::toString() const {return "backup Completed";}
+
+BackupStudio::~BackupStudio() {}
 
 RestoreStudio::RestoreStudio(): BaseAction() {}
 
@@ -225,6 +248,8 @@ std::string RestoreStudio::toString() const {
         s += " Error: " + getErrorMsg();
     return s;
 }
+
+RestoreStudio::~RestoreStudio() {}
 
 
 
