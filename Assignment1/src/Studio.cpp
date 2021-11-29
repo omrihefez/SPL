@@ -189,12 +189,11 @@ void Studio::start() {
                     }
                     start = index + 3;
                 }
-                OpenTrainer o = OpenTrainer(trainerId, customersToAdd);
-                o.act(*this);
-                if (o.getStatus() == ERROR)
+                OpenTrainer* a = new OpenTrainer(trainerId, customersToAdd);
+                a->act(*this);
+                if (a->getStatus() == ERROR)
                     cout << "Error: Workout session does not exist or is already open." << endl;
-                BaseAction* ba = &o;
-                actionsLog.push_back(ba);
+                actionsLog.push_back(a);
                 s = "";
                 caseNumber = -1;
                 break;
@@ -203,12 +202,11 @@ void Studio::start() {
                 string trainerId = "";
                 for (size_t i = s.find_first_of(" ") + 1; i < s.length(); i++)
                     trainerId += s[i];
-                Order a = Order(stoi(trainerId));
-                a.act(*this);
-                if (a.getStatus() == ERROR)
+                Order* a = new Order(stoi(trainerId));
+                a->act(*this);
+                if (a->getStatus() == ERROR)
                     cout << "Error: Workout session does not exist or is already open." << endl;
-                BaseAction* ba = &a;
-                actionsLog.push_back(ba);
+                actionsLog.push_back(a);
                 s = "";
                 caseNumber = -1;
                 break;
@@ -231,81 +229,73 @@ void Studio::start() {
                 for (size_t i = start; i < s.length(); i++) {
                     customerId += s[i];
                 }
-                MoveCustomer a = MoveCustomer(stoi(src), stoi(dst), stoi(customerId));
-                a.act(*this);
-                if (a.getStatus() == ERROR)
+                MoveCustomer* a = new MoveCustomer(stoi(src), stoi(dst), stoi(customerId));
+                a->act(*this);
+                if (a->getStatus() == ERROR)
                     cout << "Cannot move customer." << endl;
-                BaseAction* ba = &a;
-                actionsLog.push_back(ba);
+                actionsLog.push_back(a);
                 s = "";
                 caseNumber = -1;
                 break;
             }
             case (3): { // close trainer
                 int trainerId = stoi(s.substr(6, s.length() - 1));
-                Close a = Close(trainerId);
-                a.act(*this);
-                if (a.getStatus() == ERROR)
+                Close* a = new Close(trainerId);
+                a->act(*this);
+                if (a->getStatus() == ERROR)
                     cout << "Error: Trainer does not exist or is not open" << endl;
-                BaseAction* ba = &a;
-                actionsLog.push_back(ba);
+                actionsLog.push_back(a);
                 s = "";
                 caseNumber = -1;
                 break;
             }
             case (4): { // print trainer status
                 int trainerId = stoi(s.substr(7, s.length() - 1));
-                PrintTrainerStatus a = PrintTrainerStatus(trainerId);
-                a.act(*this);
-                BaseAction* ba = &a;
-                actionsLog.push_back(ba);
+                PrintTrainerStatus* a = new PrintTrainerStatus(trainerId);
+                a->act(*this);
+                actionsLog.push_back(a);
                 s = "";
                 caseNumber = -1;
                 break;
             }
             case (5): { // print workout options
-                PrintWorkoutOptions a = PrintWorkoutOptions();
-                a.act(*this);
-                BaseAction* ba = &a;
-                actionsLog.push_back(ba);
+                PrintWorkoutOptions* a = new PrintWorkoutOptions();
+                a->act(*this);
+                actionsLog.push_back(a);
                 s = "";
                 caseNumber = -1;
                 break;
             }
             case (6): { // print action log
-                PrintActionsLog a = PrintActionsLog();
-                a.act(*this);
-                BaseAction* ba = &a;
-                actionsLog.push_back(ba);
+                PrintActionsLog* a = new PrintActionsLog();
+                a->act(*this);
+                actionsLog.push_back(a);
                 s = "";
                 caseNumber = -1;
                 break;
             }
             case (7): { // backup studio
-                BackupStudio a = BackupStudio();
-                a.act(*this);
-                BaseAction* ba = &a;
-                actionsLog.push_back(ba);
+                BackupStudio* a = new BackupStudio();
+                a->act(*this);
+                actionsLog.push_back(a);
                 s = "";
                 caseNumber = -1;
                 break;
             }
             case (8): { // restore studio
-                RestoreStudio a = RestoreStudio();
-                a.act(*this);
-                if (a.getStatus() == ERROR)
+                RestoreStudio* a = new RestoreStudio();
+                a->act(*this);
+                if (a->getStatus() == ERROR)
                     cout << "Error: No backup available" << endl;
-                BaseAction* ba = &a;
-                actionsLog.push_back(ba);
+                actionsLog.push_back(a);
                 s = "";
                 caseNumber = -1;
                 break;
             }
             case (9): { // close all
-                CloseAll a = CloseAll();
-                a.act(*this);
-                BaseAction* ba = &a;
-                actionsLog.push_back(ba);
+                CloseAll* a = new CloseAll();
+                a->act(*this);
+                actionsLog.push_back(a);
                 open = false;
                 s = "";
                 caseNumber = -1;

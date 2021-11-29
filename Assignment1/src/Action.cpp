@@ -36,11 +36,15 @@ void OpenTrainer::act(Studio &studio) {
 
 
 std::string OpenTrainer::toString() const {
-    std::string s = "open" + std::to_string(trainerId) + " ";
+    std::string s = "open " + std::to_string(trainerId);
     for(int i=0 ; i < customers.size() ; i++)
         s += " " + customers[i]->toString();
-
-    return s;
+    if (getStatus() == COMPLETED)
+        return s + " Completed";
+    else {
+        const string s1 = s + " Error: " + getErrorMsg();
+        return s1;
+    }
 }
 
 Order::Order(int id): BaseAction(), trainerId(id) {}
@@ -65,7 +69,12 @@ void Order::act(Studio &studio) {
 }
 
 std::string Order::toString() const {
-    return "order " + trainerId;
+    string s = "order " + std::to_string(trainerId);
+    if (getStatus() == COMPLETED)
+        s += " Completed";
+    else
+        s += " Error: " + getErrorMsg();
+    return s;
 }
 
 MoveCustomer::MoveCustomer(int src, int dst, int customerId): BaseAction(), srcTrainer(src),
@@ -88,7 +97,12 @@ void MoveCustomer::act(Studio &studio) {
 }
 
 std::string MoveCustomer::toString() const {
-    return "move " + srcTrainer + dstTrainer + id;
+    string s = "move " + std::to_string(srcTrainer) + std::to_string(dstTrainer) + std::to_string(id);
+    if (getStatus() == COMPLETED)
+        s += " Completed";
+    else
+        s += " Error: " + getErrorMsg();
+    return s;
 }
 
 Close::Close(int id): BaseAction(), trainerId(id) {}
@@ -106,7 +120,12 @@ void Close::act(Studio &studio) {
 }
 
 std::string Close::toString() const {
-    return "close " + trainerId;
+    string s = "close " + std::to_string(trainerId);
+    if (getStatus() == COMPLETED)
+        s += " Completed";
+    else
+        s += " Error: " + getErrorMsg();
+    return s;
 }
 
 CloseAll::CloseAll(): BaseAction() {}
@@ -124,7 +143,7 @@ void CloseAll::act(Studio &studio) {
 }
 
 string CloseAll::toString() const {
-    return "closeall";
+    return "closeall Completed";
 }
 
 PrintWorkoutOptions::PrintWorkoutOptions(): BaseAction() {}
@@ -138,7 +157,7 @@ void PrintWorkoutOptions::act(Studio &studio) {
 }
 
 string PrintWorkoutOptions::toString() const {
-    return "workout_options";
+    return "workout_options Completed";
 }
 
 PrintTrainerStatus::PrintTrainerStatus(int id): BaseAction(), trainerId(id) {}
@@ -162,7 +181,7 @@ void PrintTrainerStatus::act(Studio &studio) {
 }
 
 std::string PrintTrainerStatus::toString() const {
-        return "status " + trainerId;
+        return "status " + std::to_string(trainerId) + " Completed";
     }
 
 PrintActionsLog::PrintActionsLog(): BaseAction() {}
@@ -170,22 +189,22 @@ PrintActionsLog::PrintActionsLog(): BaseAction() {}
 void PrintActionsLog::act(Studio &studio) {
     const std::vector<BaseAction*>& log = studio.getActionsLog();
     for (size_t i = 0; i < log.size(); i++){
-        string status = log[i]->getStatus() == COMPLETED ? "Completed" : "Error: "; //+ log[i]->getErrorMsg();
-        cout << log[i]->toString() << " " << status << endl;
+        //string status = log[i]->getStatus() == COMPLETED ? "Completed" : "Error: " + getErrorMsg();
+        cout << log[i]->toString() << endl;
     }
     complete();
 }
 
-string PrintActionsLog::toString() const {return "log";}
+string PrintActionsLog::toString() const {return "log Completed";}
 
 BackupStudio::BackupStudio(): BaseAction() {}
 
 void BackupStudio::act(Studio &studio) {
-    backup = &studio;
+    *backup = Studio(studio);
     complete();
 }
 
-string BackupStudio::toString() const {return "backup";}
+string BackupStudio::toString() const {return "backup Completed";}
 
 RestoreStudio::RestoreStudio(): BaseAction() {}
 
@@ -193,12 +212,19 @@ void RestoreStudio::act(Studio &studio) {
     if (backup == nullptr)
         error("No backup available");
     else {
-        //studio = backup;
+        studio = *backup;
         complete();
     }
 }
 
-std::string RestoreStudio::toString() const {return "restore";}
+std::string RestoreStudio::toString() const {
+    string s = "restore";
+    if (getStatus() == COMPLETED)
+        s += " Completed";
+    else
+        s += " Error: " + getErrorMsg();
+    return s;
+}
 
 
 
