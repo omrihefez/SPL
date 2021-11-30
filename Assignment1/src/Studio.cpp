@@ -15,7 +15,7 @@ using namespace std;
 int customerId = 0;
 
 
-Studio::Studio(): open(false) {}
+Studio::Studio(): open(false), trainers(), workout_options(), actionsLog() {}
 
 Workout buildWorkout(int id, string _line) {
     string workoutName;
@@ -27,8 +27,10 @@ Workout buildWorkout(int id, string _line) {
     for (index = 0; _line[index] != ','; index++)
         workoutName += _line[index];
     index += 2;
-    for (index; _line[index] != ','; index++)
+    while (_line[index] != ',') {
         workoutType += _line[index];
+        index++;
+    }
     if (workoutType[0] == 'A')
         type = ANAEROBIC;
     else if (workoutType[0] == 'C')
@@ -36,14 +38,15 @@ Workout buildWorkout(int id, string _line) {
     else
         type = MIXED;
     index += 2;
-    for (index; index < _line.length(); index++)
+    while ((size_t)index < _line.length()){
         priceString += _line[index];
+        index++;
+    }
     price = stoi(priceString);
     return Workout(id, workoutName, price, type);
 }
 
-Studio::Studio(const std::string &configFilePath) {
-    open = false;
+Studio::Studio(const std::string &configFilePath): open(false), trainers(), workout_options(), actionsLog() {
     string line = "";
     ifstream f(configFilePath);
     int lineNumber = 0;
@@ -60,8 +63,8 @@ Studio::Studio(const std::string &configFilePath) {
                 }
                 case 1: {
                     string capacity = "";
-                    for (int i = 0; i <= line.length(); i++) {
-                        if (i < line.length() && line[i] != ','  & line[i] != ' ') {
+                    for (size_t i = 0; i <= line.length(); i++) {
+                        if ((i < line.length()) && (line[i] != ',')  & (line[i] != ' ')) {
                             capacity += line[i];
                         }
                         else {
@@ -137,7 +140,7 @@ void Studio::start() {
                     swt, chp, mcl, fbd
                 };
                 customerType ct;
-                for (start; (size_t)start < s.length(); start++) {
+                while ((size_t)start < s.length()) {
                     int index = start;
                     while (s[index] != ',') {
                         customerName += s[index];
@@ -187,9 +190,10 @@ void Studio::start() {
                             break;
                         }
                     }
-                    start = index + 3;
+                    start = index + 4;
                 }
                 OpenTrainer* a = new OpenTrainer(trainerId, customersToAdd);
+                customersToAdd.clear();
                 a->act(*this);
                 if (a->getStatus() == ERROR)
                     cout << "Error: Workout session does not exist or is already open." << endl;
@@ -349,17 +353,18 @@ Studio::~Studio(){
 
 //copy constructor
 Studio::Studio (const Studio &other): Studio() {
-    vector<Trainer*> trainersOfOther = other.trainers;
-    for (size_t i = 0; i < trainersOfOther.size(); i++){
-        Trainer t = *trainersOfOther[i];
-        trainers.push_back(&t);
+    open = other.open;
+    for (size_t i = 0; i < other.trainers.size(); i++){
+        Trainer* t(other.trainers[i]);
+        trainers.push_back(t);
     }
-    vector<Workout> other_workout_options = other.workout_options;
-    for (size_t i = 0; i < other_workout_options.size(); i++)
-        workout_options.push_back(other_workout_options[i]);
-    vector<BaseAction*> otherActionlog = other.actionsLog;
-    for (size_t i = 0; i < actionsLog.size(); i++){
-        BaseAction *action = (otherActionlog[i]);
+    for (size_t i = 0; i < other.workout_options.size(); i++) {
+        Workout w = Workout(other.workout_options[i].getId(), other.workout_options[i].getName(),
+                            other.workout_options[i].getPrice(), other.workout_options[i].getType());
+        workout_options.push_back(w);
+    }
+    for (size_t i = 0; i < other.actionsLog.size(); i++){
+        BaseAction* action = &other.actionsLog[i]->clone();
         actionsLog.push_back(action);
     }
 }
@@ -369,20 +374,25 @@ Studio &Studio::operator=(const Studio &other) {
     if (this == &other)
         return *this;
     open = other.open;
+//    for (size_t i = 0; i < trainers.size(); i++)
+//        delete trainers[i];
     trainers.clear();
-    vector<Trainer*> trainersOfOther = other.trainers;
-    for (int i = 0; i < trainersOfOther.size(); i++){
-        Trainer t = *trainersOfOther[i];
-        trainers.push_back(&t);
+    for (size_t i = 0; i < other.trainers.size(); i++){
+        Trainer* t(other.trainers[i]);
+        trainers.push_back(t);
     }
     workout_options.clear();
-    for (size_t i = 0; i < other.workout_options.size(); i++){
-        workout_options.push_back(other.workout_options[i]);
+    for (size_t i = 0; i < other.workout_options.size(); i++) {
+        Workout w = Workout(other.workout_options[i].getId(), other.workout_options[i].getName(),
+                            other.workout_options[i].getPrice(), other.workout_options[i].getType());
+        workout_options.push_back(w);
     }
+//    for (size_t i = 0; i < actionsLog.size(); i++){
+//        delete actionsLog[i];
+//    }
     actionsLog.clear();
-    vector<BaseAction*> otherActionlog = other.actionsLog;
-    for (size_t i = 0; i < actionsLog.size(); i++){
-        BaseAction *action = (otherActionlog[i]);
+    for (size_t i = 0; i < other.actionsLog.size(); i++){
+        BaseAction* action = &other.actionsLog[i]->clone();
         actionsLog.push_back(action);
     }
     return *this;

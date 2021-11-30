@@ -19,6 +19,7 @@ public:
     virtual void act(Studio& studio)=0;
     virtual std::string toString() const=0;
     virtual ~BaseAction();
+    virtual BaseAction& clone()=0;
 protected:
     void complete();
     void error(std::string errorMsg);
@@ -35,9 +36,12 @@ public:
     void act(Studio &studio);
     std::string toString() const;
     virtual ~OpenTrainer();
+    BaseAction& clone();
+    int getTrainerId();
+    std::vector<Customer*>& getCustomers();
 private:
 	const int trainerId;
-	std::vector<Customer *> customers;
+	std::vector<Customer*> customers;
 };
 
 
@@ -47,6 +51,8 @@ public:
     void act(Studio &studio);
     std::string toString() const;
     virtual ~Order();
+    BaseAction& clone();
+    int getTrainerId();
 private:
     const int trainerId;
 };
@@ -58,6 +64,10 @@ public:
     void act(Studio &studio);
     std::string toString() const;
     virtual ~MoveCustomer();
+    BaseAction& clone();
+    int getId();
+    int getSrcTrainer();
+    int getDstTrainer();
 private:
     const int srcTrainer;
     const int dstTrainer;
@@ -71,6 +81,8 @@ public:
     void act(Studio &studio);
     std::string toString() const;
     virtual ~Close();
+    int getTrainerId();
+    BaseAction& clone();
 private:
     const int trainerId;
 };
@@ -82,6 +94,7 @@ public:
     void act(Studio &studio);
     std::string toString() const;
     virtual ~CloseAll();
+    BaseAction& clone();
 private:
 };
 
@@ -92,6 +105,7 @@ public:
     void act(Studio &studio);
     std::string toString() const;
     ~PrintWorkoutOptions();
+    BaseAction& clone();
 private:
 };
 
@@ -102,6 +116,8 @@ public:
     void act(Studio &studio);
     std::string toString() const;
     ~PrintTrainerStatus();
+    int getTrainerId();
+    BaseAction& clone();
 private:
     const int trainerId;
 };
@@ -113,6 +129,7 @@ public:
     void act(Studio &studio);
     std::string toString() const;
     ~PrintActionsLog();
+    BaseAction& clone();
 private:
 };
 
@@ -123,6 +140,7 @@ public:
     void act(Studio &studio);
     std::string toString() const;
     ~BackupStudio();
+    BaseAction& clone();
 private:
 };
 
@@ -133,6 +151,7 @@ public:
     void act(Studio &studio);
     std::string toString() const;
     ~RestoreStudio();
+    BaseAction& clone();
 
 };
 

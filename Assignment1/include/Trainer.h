@@ -10,13 +10,13 @@ typedef std::pair<int, Workout> OrderPair;
 class Trainer{
 public:
     Trainer(int t_capacity);
-    Trainer( Trainer &other);
-    void copy(int &other_capacity, bool &other_open, int &other_id, int &other_salary, int &other_origCapacity, std::vector<Customer*> other_customersList, std::vector<OrderPair> other_orderList );
-    Trainer& operator=(Trainer& other);
-    ~Trainer();
-   Trainer(Trainer&& other);
+    Trainer(const Trainer &other); // copy constructor
+    void copy(std::vector<Customer*> other_customersList, std::vector<OrderPair> other_orderList );
+    Trainer& operator=(Trainer& other); // copy assignment operator
+    ~Trainer(); // destructor
+    Trainer(Trainer&& other); // move constructor
     void clear();
-    Trainer& operator=(Trainer &&other);
+    Trainer& operator=(Trainer &&other); // move assignment operator
     int getCapacity() const;
     void addCustomer(Customer* customer);
     void removeCustomer(int id);

@@ -8,59 +8,80 @@
 using namespace std;
 static int idCounter = 0;
 
-Trainer::Trainer (int t_capacity) : id(idCounter), capacity(t_capacity), open(false), salary(0), origCapacity(t_capacity) {idCounter++;}
+Trainer::Trainer (int t_capacity) : id(idCounter), capacity(t_capacity), open(false), salary(0), origCapacity(t_capacity),
+                                    customersList(), orderList() {idCounter++;}
 
 // Copy Constructor
-Trainer::Trainer( Trainer &other) {
-    copy(other.capacity, other.open, other.id, other.salary, other.origCapacity, other.customersList, other.orderList);
+Trainer::Trainer(const Trainer &other) : id(other.id), capacity(other.capacity), open(other.open), salary(other.salary),
+                                    origCapacity(other.origCapacity), customersList(), orderList() {
+    copy(other.customersList, other.orderList);
 }
 
-void Trainer::copy(int &other_capacity, bool &other_open, int &other_id, int &other_salary, int &other_origCapacity, vector<Customer*> other_customersList, vector<OrderPair> other_orderList )
-{
-    capacity = other_capacity;
-    open = other_open;
-    id = other_id;
-    salary = other_salary;
-    origCapacity = other_origCapacity;
-    for (size_t i=0 ; i < other_customersList.size() ; i++)
-        customersList.push_back(other_customersList[i]);
-    for (size_t j=0 ; j < other_orderList.size() ; j++)
-        orderList.push_back(other_orderList[j]);
+void Trainer::copy(vector<Customer*> other_customersList, vector<OrderPair> other_orderList ){
+        for (size_t i = 0; i < other_customersList.size(); i++) {
+            if (dynamic_cast<SweatyCustomer *>(other_customersList[i])) {
+                SweatyCustomer *c = new SweatyCustomer(other_customersList[i]->getName(),
+                                                       other_customersList[i]->getId());
+                customersList.push_back(c);
+            } else if (dynamic_cast<CheapCustomer *>(other_customersList[i])) {
+                CheapCustomer *c = new CheapCustomer(other_customersList[i]->getName(),
+                                                     other_customersList[i]->getId());
+                customersList.push_back(c);
+            } else if (dynamic_cast<HeavyMuscleCustomer *>(other_customersList[i])) {
+                HeavyMuscleCustomer *c = new HeavyMuscleCustomer(other_customersList[i]->getName(),
+                                                                 other_customersList[i]->getId());
+                customersList.push_back(c);
+            } else { // FullBodyCustomer
+                FullBodyCustomer *c = new FullBodyCustomer(other_customersList[i]->getName(),
+                                                           other_customersList[i]->getId());
+                customersList.push_back(c);
+            }
+        }
+        for (size_t j = 0; j < other_orderList.size(); j++) {
+            Workout w = Workout(other_orderList[j].second.getId(), other_orderList[j].second.getName(),
+                                other_orderList[j].second.getPrice(), other_orderList[j].second.getType());
+            OrderPair o = OrderPair(other_orderList[j].first, w);
+            orderList.push_back(o);
+        }
 }
 
 // Copy Assignment
 Trainer& Trainer::operator=(Trainer& other) {
     if (this != &other) {
-        //clear();
-        copy(other.capacity, other.open, other.id, other.salary, other.origCapacity,other.customersList,other.orderList);
+        id = other.id;
+        capacity = other.capacity;
+        open = other.open;
+        salary = other.salary;
+        origCapacity = other.origCapacity;
+        copy(other.customersList,other.orderList);
     }
     return *this;
 }
 
 // Destructor
 Trainer::~Trainer() {
+    id = -1;
+    capacity = 0;
+    open = false;
+    salary = 0;
+    origCapacity = 0;
     for (size_t i = 0; i < customersList.size(); i++)
         delete customersList[i];
     customersList.clear();
+    orderList.clear();
 }
 
-//void Trainer::clear() {
-//    if (!customersList.empty())
-//        for (size_t i=0 ; i < customersList.size() ; i++)
-//            delete (customersList[i]);
-//}
-
 // Move Constructor
-Trainer::Trainer(Trainer&& other)
-        : id(other.id), capacity(other.capacity), open(other.open), salary(other.salary), origCapacity(other.origCapacity)
-{
+Trainer::Trainer(Trainer&& other): id(other.id), capacity(other.capacity), open(other.open), salary(other.salary),
+                                    origCapacity(other.origCapacity), customersList(), orderList() {
     other.capacity = 0 ;
     other.open = false ;
     other.id = -1 ;
     other.salary = 0 ;
     other.origCapacity = 0 ;
-    for (size_t i=0 ; i < customersList.size() ; i++)
-        customersList[i] = nullptr;
+    for (size_t i=0 ; i < customersList.size() ; i++) {
+        delete customersList[i];
+    }
     customersList.clear();
     orderList.clear();
 
@@ -71,7 +92,7 @@ Trainer& Trainer::operator=(Trainer &&other){
 
   for (size_t i=0 ; i < other.customersList.size() ; i++) {
       customersList.push_back(other.customersList[i]);
-//      delete (other.customersList[i]);
+      other.customersList[i] = nullptr;
   }
   other.customersList.clear();
   for (size_t i = 0; i < other.orderList.size(); i++)
@@ -98,11 +119,20 @@ void Trainer::addCustomer(Customer *customer) {
 }
 
 void Trainer::removeCustomer(int id) {
-    for (size_t i = 0 ; i < customersList.size() ; i++)
+    std::vector<Customer*> temp;
+    for (size_t i = 0 ; i < customersList.size() ; i++) {
         if (customersList[i]->getId() == id) {
-            customersList.erase(customersList.begin() + i);
+            delete customersList[i];
+            //customersList.erase(customersList.begin() + i);
             capacity++;
-        }
+        } else
+            temp.push_back(customersList[i]);
+    }
+    customersList.clear();
+    for (size_t i = 0; i < temp.size(); i++)
+        customersList.push_back(temp[i]);
+    temp.clear();
+
     removeOrdersOfCustomerById(id);
 //    for (size_t j=0 ; j < orderList.size() ; j++)
 //        if (orderList[j].first == id){
@@ -171,14 +201,13 @@ void Trainer::openTrainer() {
     if (open)
         throw "Workout session does not exist or is already open.";
     open = true;
-
 }
 
 void Trainer::closeTrainer() {
     open = false;
     capacity = origCapacity;
-//    for (size_t i=0 ; i < customersList.size() ; i++)
-//        delete(customersList[i]);
+    for (size_t i=0 ; i < customersList.size() ; i++)
+        delete(customersList[i]);
     customersList.clear();
     orderList.clear();
 }

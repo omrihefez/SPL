@@ -48,9 +48,19 @@ Workout.h
 string
 -
 
-/mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/src/Action.cpp
-../include/Action.h
-/mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/include/Action.h
+/mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/src/Studio.cpp
+iostream
+-
+string
+-
+fstream
+-
+algorithm
+-
+cstring
+-
+sstream
+-
 ../include/Studio.h
 /mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/include/Studio.h
 
