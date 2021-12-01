@@ -53,6 +53,10 @@ Trainer& Trainer::operator=(Trainer& other) {
         open = other.open;
         salary = other.salary;
         origCapacity = other.origCapacity;
+        for (size_t i = 0; i < customersList.size(); i++)
+            delete customersList[i];
+        customersList.clear();
+        orderList.clear();
         copy(other.customersList,other.orderList);
     }
     return *this;
@@ -79,32 +83,31 @@ Trainer::Trainer(Trainer&& other): id(other.id), capacity(other.capacity), open(
     other.id = -1 ;
     other.salary = 0 ;
     other.origCapacity = 0 ;
-    for (size_t i=0 ; i < customersList.size() ; i++) {
-        delete customersList[i];
-    }
-    customersList.clear();
-    orderList.clear();
-
+    other.customersList.clear();
+    other.orderList.clear();
 }
 
 // Move Assignment
 Trainer& Trainer::operator=(Trainer &&other){
-
-  for (size_t i=0 ; i < other.customersList.size() ; i++) {
-      customersList.push_back(other.customersList[i]);
-      other.customersList[i] = nullptr;
-  }
-  other.customersList.clear();
-  for (size_t i = 0; i < other.orderList.size(); i++)
-      orderList.push_back(other.orderList[i]);
-  other.orderList.clear();
-  capacity = other.capacity;
-  open = other.open;
-  id = other.id;
-  salary = other.salary;
-  origCapacity = other.origCapacity;
-
-  return *this;
+    for (size_t i = 0; i < customersList.size(); i++)
+        delete customersList[i];
+    customersList.clear();
+    customersList = std::move(other.customersList);
+    orderList.clear();
+    orderList = std::move(other.orderList);
+    capacity = other.capacity;
+    open = other.open;
+    id = other.id;
+    salary = other.salary;
+    origCapacity = other.origCapacity;
+    other.orderList.clear();
+    other.customersList.clear();
+    other.capacity = 0 ;
+    other.open = false ;
+    other.id = -1 ;
+    other.salary = 0 ;
+    other.origCapacity = 0 ;
+    return *this;
 }
 
 

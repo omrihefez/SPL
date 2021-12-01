@@ -462,8 +462,26 @@ Studio &Studio::operator=(Studio &&other){
     if (this == &other)
         return *this;
     open = other.open;
+    for (size_t i = 0; i < trainers.size(); i++) {
+        for (size_t j = 0; j < trainers[i]->getCustomers().size(); j++)
+            delete trainers[i]->getCustomers()[j];
+        trainers[i]->getCustomers().clear();
+        delete trainers[i];
+    }
+    trainers.clear();
     trainers = std::move(other.trainers);
+    workout_options.clear();
     workout_options = std::move(other.workout_options);
+    for (size_t i = 0; i < actionsLog.size(); i++){
+        if (dynamic_cast<OpenTrainer*>(actionsLog[i])) {
+            for (size_t j = 0; j < dynamic_cast<OpenTrainer *>(actionsLog[i])->getCustomers().size(); j++) {
+                delete dynamic_cast<OpenTrainer *>(actionsLog[i])->getCustomers()[j];
+                dynamic_cast<OpenTrainer *>(actionsLog[i])->getCustomers()[j] = nullptr;
+            }
+        }
+        delete actionsLog[i];
+    }
+    actionsLog.clear();
     actionsLog = std::move(other.actionsLog);
     other.open = false;
     other.workout_options.clear();
