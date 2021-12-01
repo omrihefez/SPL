@@ -14,10 +14,6 @@ int main(int argc, char** argv){
     string configurationFile = argv[1];
     Studio studio(configurationFile);
     studio.start();
-    Studio sa(std::move(configurationFile));
-    sa.start();
-    Studio studio1 = Studio(configurationFile);
-    studio1.start();
     if(backup!=nullptr){
     	delete backup;
     	backup = nullptr;
