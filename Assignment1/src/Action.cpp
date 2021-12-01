@@ -62,7 +62,7 @@ int OpenTrainer::getTrainerId() {return trainerId;}
 
 std::vector<Customer *>& OpenTrainer::getCustomers() {return customers;}
 
-BaseAction& OpenTrainer::clone() {
+BaseAction* OpenTrainer::clone() {
     vector<Customer*> c;
     for (size_t i = 0; i < this->getCustomers().size(); i++){
         if (dynamic_cast<SweatyCustomer *>(this->getCustomers()[i])) {
@@ -88,7 +88,7 @@ BaseAction& OpenTrainer::clone() {
         o->error(this->getErrorMsg());
     else
         o->complete();
-    return *o;
+    return o;
 }
 
 Order::Order(int id): BaseAction(), trainerId(id) {}
@@ -123,13 +123,13 @@ std::string Order::toString() const {
 
 int Order::getTrainerId() {return trainerId;}
 
-BaseAction& Order::clone() {
+BaseAction* Order::clone() {
     Order* o = new Order(this->getTrainerId());
     if (this->getStatus() == ERROR)
         o->error(this->getErrorMsg());
     else
         o->complete();
-    return *o;
+    return o;
 }
 
 
@@ -186,13 +186,13 @@ int MoveCustomer::getId() {return id;}
 int MoveCustomer::getSrcTrainer() {return srcTrainer;}
 int MoveCustomer::getDstTrainer() {return dstTrainer;}
 
-BaseAction& MoveCustomer::clone() {
+BaseAction* MoveCustomer::clone() {
     MoveCustomer* o = new MoveCustomer(this->getSrcTrainer(),this->getDstTrainer(),this->getId());
     if (this->getStatus() == ERROR)
         o->error(this->getErrorMsg());
     else
         o->complete();
-    return *o;
+    return o;
 }
 
 MoveCustomer::~MoveCustomer() {}
@@ -223,14 +223,14 @@ std::string Close::toString() const {
 
 int Close::getTrainerId() {return trainerId;}
 
-BaseAction& Close::clone() {
+BaseAction* Close::clone() {
 
     Close* o = new Close(this->getTrainerId());
     if (this->getStatus() == ERROR)
         o->error(this->getErrorMsg());
     else
         o->complete();
-    return *o;
+    return o;
 }
 
 Close::~Close() {}
@@ -254,14 +254,14 @@ string CloseAll::toString() const {
     return "closeall Completed";
 }
 
-BaseAction& CloseAll::clone() {
+BaseAction* CloseAll::clone() {
 
     CloseAll* o = new CloseAll();
     if (this->getStatus() == ERROR)
         o->error(this->getErrorMsg());
     else
         o->complete();
-    return *o;
+    return o;
 }
 
 CloseAll::~CloseAll() {}
@@ -281,14 +281,14 @@ string PrintWorkoutOptions::toString() const {
     return "workout_options Completed";
 }
 
-BaseAction& PrintWorkoutOptions::clone() {
+BaseAction* PrintWorkoutOptions::clone() {
 
     PrintWorkoutOptions* o = new PrintWorkoutOptions();
     if (this->getStatus() == ERROR)
         o->error(this->getErrorMsg());
     else
         o->complete();
-    return *o;
+    return o;
 }
 
 PrintWorkoutOptions::~PrintWorkoutOptions() {}
@@ -320,14 +320,14 @@ std::string PrintTrainerStatus::toString() const {
 
 int PrintTrainerStatus::getTrainerId() {return trainerId;}
 
-BaseAction& PrintTrainerStatus::clone() {
+BaseAction* PrintTrainerStatus::clone() {
 
     PrintTrainerStatus* o = new PrintTrainerStatus(this->getTrainerId());
     if (this->getStatus() == ERROR)
         o->error(this->getErrorMsg());
     else
         o->complete();
-    return *o;
+    return o;
 }
 
 PrintTrainerStatus::~PrintTrainerStatus() {}
@@ -345,14 +345,14 @@ void PrintActionsLog::act(Studio &studio) {
 
 string PrintActionsLog::toString() const {return "log Completed";}
 
-BaseAction& PrintActionsLog::clone() {
+BaseAction* PrintActionsLog::clone() {
 
     PrintActionsLog* o = new PrintActionsLog();
     if (this->getStatus() == ERROR)
         o->error(this->getErrorMsg());
     else
         o->complete();
-    return *o;
+    return o;
 }
 
 PrintActionsLog::~PrintActionsLog() {}
@@ -371,14 +371,14 @@ void BackupStudio::act(Studio &studio) {
 
 string BackupStudio::toString() const {return "backup Completed";}
 
-BaseAction& BackupStudio::clone() {
+BaseAction* BackupStudio::clone() {
 
     BackupStudio* o = new BackupStudio();
     if (this->getStatus() == ERROR)
         o->error(this->getErrorMsg());
     else
         o->complete();
-    return *o;
+    return o;
 }
 
 BackupStudio::~BackupStudio() {}
@@ -403,14 +403,14 @@ std::string RestoreStudio::toString() const {
     return s;
 }
 
-BaseAction& RestoreStudio::clone() {
+BaseAction* RestoreStudio::clone() {
 
     RestoreStudio* o = new RestoreStudio();
     if (this->getStatus() == ERROR)
         o->error(this->getErrorMsg());
     else
         o->complete();
-    return *o;
+    return o;
 }
 
 RestoreStudio::~RestoreStudio() {}

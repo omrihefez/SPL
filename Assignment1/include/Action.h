@@ -19,7 +19,7 @@ public:
     virtual void act(Studio& studio)=0;
     virtual std::string toString() const=0;
     virtual ~BaseAction();
-    virtual BaseAction& clone()=0;
+    virtual BaseAction* clone()=0;
 
 protected:
     void complete();
@@ -38,7 +38,7 @@ public:
     void act(Studio &studio);
     std::string toString() const;
     virtual ~OpenTrainer();
-    BaseAction& clone();
+    BaseAction* clone();
     int getTrainerId();
     std::vector<Customer*>& getCustomers();
 private:
@@ -53,7 +53,7 @@ public:
     void act(Studio &studio);
     std::string toString() const;
     virtual ~Order();
-    BaseAction& clone();
+    BaseAction* clone();
     int getTrainerId();
 private:
     const int trainerId;
@@ -66,7 +66,7 @@ public:
     void act(Studio &studio);
     std::string toString() const;
     virtual ~MoveCustomer();
-    BaseAction& clone();
+    BaseAction* clone();
     int getId();
     int getSrcTrainer();
     int getDstTrainer();
@@ -84,7 +84,7 @@ public:
     std::string toString() const;
     virtual ~Close();
     int getTrainerId();
-    BaseAction& clone();
+    BaseAction* clone();
 private:
     const int trainerId;
 };
@@ -96,7 +96,7 @@ public:
     void act(Studio &studio);
     std::string toString() const;
     virtual ~CloseAll();
-    BaseAction& clone();
+    BaseAction* clone();
 private:
 };
 
@@ -107,7 +107,7 @@ public:
     void act(Studio &studio);
     std::string toString() const;
     ~PrintWorkoutOptions();
-    BaseAction& clone();
+    BaseAction* clone();
 private:
 };
 
@@ -119,7 +119,7 @@ public:
     std::string toString() const;
     ~PrintTrainerStatus();
     int getTrainerId();
-    BaseAction& clone();
+    BaseAction* clone();
 private:
     const int trainerId;
 };
@@ -131,7 +131,7 @@ public:
     void act(Studio &studio);
     std::string toString() const;
     ~PrintActionsLog();
-    BaseAction& clone();
+    BaseAction* clone();
 private:
 };
 
@@ -142,7 +142,7 @@ public:
     void act(Studio &studio);
     std::string toString() const;
     ~BackupStudio();
-    BaseAction& clone();
+    BaseAction* clone();
 private:
 };
 
@@ -153,7 +153,7 @@ public:
     void act(Studio &studio);
     std::string toString() const;
     ~RestoreStudio();
-    BaseAction& clone();
+    BaseAction* clone();
 
 };
 
