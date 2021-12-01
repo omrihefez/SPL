@@ -20,10 +20,12 @@ public:
     virtual std::string toString() const=0;
     virtual ~BaseAction();
     virtual BaseAction& clone()=0;
+
 protected:
     void complete();
     void error(std::string errorMsg);
     std::string getErrorMsg() const;
+
 private:
     std::string errorMsg;
     ActionStatus status;

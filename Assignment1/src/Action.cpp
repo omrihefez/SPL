@@ -84,6 +84,10 @@ BaseAction& OpenTrainer::clone() {
         }
     }
     OpenTrainer* o = new OpenTrainer(this->getTrainerId(), c);
+    if (this->getStatus() == ERROR)
+        o->error(this->getErrorMsg());
+    else
+        o->complete();
     return *o;
 }
 
@@ -121,6 +125,10 @@ int Order::getTrainerId() {return trainerId;}
 
 BaseAction& Order::clone() {
     Order* o = new Order(this->getTrainerId());
+    if (this->getStatus() == ERROR)
+        o->error(this->getErrorMsg());
+    else
+        o->complete();
     return *o;
 }
 
@@ -166,7 +174,7 @@ void MoveCustomer::act(Studio &studio) {
 }
 
 std::string MoveCustomer::toString() const {
-    string s = "move " + std::to_string(srcTrainer) + std::to_string(dstTrainer) + std::to_string(id);
+    string s = "move " + std::to_string(srcTrainer) + " " + std::to_string(dstTrainer) + " " + std::to_string(id);
     if (getStatus() == COMPLETED)
         s += " Completed";
     else
@@ -179,8 +187,11 @@ int MoveCustomer::getSrcTrainer() {return srcTrainer;}
 int MoveCustomer::getDstTrainer() {return dstTrainer;}
 
 BaseAction& MoveCustomer::clone() {
-
     MoveCustomer* o = new MoveCustomer(this->getSrcTrainer(),this->getDstTrainer(),this->getId());
+    if (this->getStatus() == ERROR)
+        o->error(this->getErrorMsg());
+    else
+        o->complete();
     return *o;
 }
 
@@ -215,6 +226,10 @@ int Close::getTrainerId() {return trainerId;}
 BaseAction& Close::clone() {
 
     Close* o = new Close(this->getTrainerId());
+    if (this->getStatus() == ERROR)
+        o->error(this->getErrorMsg());
+    else
+        o->complete();
     return *o;
 }
 
@@ -242,6 +257,10 @@ string CloseAll::toString() const {
 BaseAction& CloseAll::clone() {
 
     CloseAll* o = new CloseAll();
+    if (this->getStatus() == ERROR)
+        o->error(this->getErrorMsg());
+    else
+        o->complete();
     return *o;
 }
 
@@ -250,9 +269,10 @@ CloseAll::~CloseAll() {}
 PrintWorkoutOptions::PrintWorkoutOptions(): BaseAction() {}
 
 void PrintWorkoutOptions::act(Studio &studio) {
+    std::string s[] = {"Anaerobic", "Mixed", "Cardio"};
     std::vector<Workout>& options = studio.getWorkoutOptions();
     for (size_t i = 0; i < options.size(); i++){
-        std::cout << options[i].getName() << ", " << options[i].getType() << ", " << options[i].getPrice() << std::endl;
+        std::cout << options[i].getName() << ", " << s[options[i].getType()] << ", " << options[i].getPrice() << std::endl;
     }
     complete();
 }
@@ -264,6 +284,10 @@ string PrintWorkoutOptions::toString() const {
 BaseAction& PrintWorkoutOptions::clone() {
 
     PrintWorkoutOptions* o = new PrintWorkoutOptions();
+    if (this->getStatus() == ERROR)
+        o->error(this->getErrorMsg());
+    else
+        o->complete();
     return *o;
 }
 
@@ -299,6 +323,10 @@ int PrintTrainerStatus::getTrainerId() {return trainerId;}
 BaseAction& PrintTrainerStatus::clone() {
 
     PrintTrainerStatus* o = new PrintTrainerStatus(this->getTrainerId());
+    if (this->getStatus() == ERROR)
+        o->error(this->getErrorMsg());
+    else
+        o->complete();
     return *o;
 }
 
@@ -320,6 +348,10 @@ string PrintActionsLog::toString() const {return "log Completed";}
 BaseAction& PrintActionsLog::clone() {
 
     PrintActionsLog* o = new PrintActionsLog();
+    if (this->getStatus() == ERROR)
+        o->error(this->getErrorMsg());
+    else
+        o->complete();
     return *o;
 }
 
@@ -342,6 +374,10 @@ string BackupStudio::toString() const {return "backup Completed";}
 BaseAction& BackupStudio::clone() {
 
     BackupStudio* o = new BackupStudio();
+    if (this->getStatus() == ERROR)
+        o->error(this->getErrorMsg());
+    else
+        o->complete();
     return *o;
 }
 
@@ -370,6 +406,10 @@ std::string RestoreStudio::toString() const {
 BaseAction& RestoreStudio::clone() {
 
     RestoreStudio* o = new RestoreStudio();
+    if (this->getStatus() == ERROR)
+        o->error(this->getErrorMsg());
+    else
+        o->complete();
     return *o;
 }
 

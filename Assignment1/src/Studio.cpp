@@ -140,7 +140,8 @@ void Studio::start() {
                     swt, chp, mcl, fbd
                 };
                 customerType ct;
-                while ((size_t)start < s.length()) {
+                int numOfCustomersAdded = 0;
+                while (((size_t)start < s.length()) & (getTrainer(trainerId)->getCapacity() != numOfCustomersAdded)) {
                     int index = start;
                     while (s[index] != ',') {
                         customerName += s[index];
@@ -163,6 +164,7 @@ void Studio::start() {
                             customersToAdd.push_back(temp);
                             temp = nullptr;
                             customerName = "";
+                            numOfCustomersAdded++;
                             break;
                         }
                         case (1): {
@@ -171,6 +173,7 @@ void Studio::start() {
                             customersToAdd.push_back(temp);
                             temp = nullptr;
                             customerName = "";
+                            numOfCustomersAdded++;
                             break;
                         }
                         case (2): {
@@ -179,6 +182,7 @@ void Studio::start() {
                             customersToAdd.push_back(temp);
                             temp = nullptr;
                             customerName = "";
+                            numOfCustomersAdded++;
                             break;
                         }
                         case (3): {
@@ -187,6 +191,7 @@ void Studio::start() {
                             customersToAdd.push_back(temp);
                             temp = nullptr;
                             customerName = "";
+                            numOfCustomersAdded++;
                             break;
                         }
                     }
@@ -197,7 +202,9 @@ void Studio::start() {
                 a->act(*this);
                 if (a->getStatus() == ERROR)
                     cout << "Error: Workout session does not exist or is already open." << endl;
-                actionsLog.push_back(a);
+                BaseAction* clone = &(a->clone());
+                actionsLog.push_back(clone);
+                delete a;
                 s = "";
                 caseNumber = -1;
                 break;
@@ -210,7 +217,9 @@ void Studio::start() {
                 a->act(*this);
                 if (a->getStatus() == ERROR)
                     cout << "Error: Workout session does not exist or is already open." << endl;
-                actionsLog.push_back(a);
+                BaseAction* clone = &(a->clone());
+                actionsLog.push_back(clone);
+                delete a;
                 s = "";
                 caseNumber = -1;
                 break;
@@ -237,7 +246,9 @@ void Studio::start() {
                 a->act(*this);
                 if (a->getStatus() == ERROR)
                     cout << "Cannot move customer." << endl;
-                actionsLog.push_back(a);
+                BaseAction* clone = &(a->clone());
+                actionsLog.push_back(clone);
+                delete a;
                 s = "";
                 caseNumber = -1;
                 break;
@@ -248,7 +259,9 @@ void Studio::start() {
                 a->act(*this);
                 if (a->getStatus() == ERROR)
                     cout << "Error: Trainer does not exist or is not open" << endl;
-                actionsLog.push_back(a);
+                BaseAction* clone = &(a->clone());
+                actionsLog.push_back(clone);
+                delete a;
                 s = "";
                 caseNumber = -1;
                 break;
@@ -257,7 +270,9 @@ void Studio::start() {
                 int trainerId = stoi(s.substr(7, s.length() - 1));
                 PrintTrainerStatus* a = new PrintTrainerStatus(trainerId);
                 a->act(*this);
-                actionsLog.push_back(a);
+                BaseAction* clone = &(a->clone());
+                actionsLog.push_back(clone);
+                delete a;
                 s = "";
                 caseNumber = -1;
                 break;
@@ -265,7 +280,9 @@ void Studio::start() {
             case (5): { // print workout options
                 PrintWorkoutOptions* a = new PrintWorkoutOptions();
                 a->act(*this);
-                actionsLog.push_back(a);
+                BaseAction* clone = &(a->clone());
+                actionsLog.push_back(clone);
+                delete a;
                 s = "";
                 caseNumber = -1;
                 break;
@@ -273,7 +290,9 @@ void Studio::start() {
             case (6): { // print action log
                 PrintActionsLog* a = new PrintActionsLog();
                 a->act(*this);
-                actionsLog.push_back(a);
+                BaseAction* clone = &(a->clone());
+                delete a;
+                actionsLog.push_back(clone);
                 s = "";
                 caseNumber = -1;
                 break;
@@ -281,7 +300,9 @@ void Studio::start() {
             case (7): { // backup studio
                 BackupStudio* a = new BackupStudio();
                 a->act(*this);
-                actionsLog.push_back(a);
+                BaseAction* clone = &(a->clone());
+                actionsLog.push_back(clone);
+                delete a;
                 s = "";
                 caseNumber = -1;
                 break;
@@ -291,7 +312,9 @@ void Studio::start() {
                 a->act(*this);
                 if (a->getStatus() == ERROR)
                     cout << "Error: No backup available" << endl;
-                actionsLog.push_back(a);
+                BaseAction* clone = &(a->clone());
+                actionsLog.push_back(clone);
+                delete a;
                 s = "";
                 caseNumber = -1;
                 break;
@@ -299,7 +322,9 @@ void Studio::start() {
             case (9): { // close all
                 CloseAll* a = new CloseAll();
                 a->act(*this);
-                actionsLog.push_back(a);
+                BaseAction* clone = &(a->clone());
+                actionsLog.push_back(clone);
+                delete a;
                 open = false;
                 s = "";
                 caseNumber = -1;
@@ -339,14 +364,25 @@ bool Studio::isOpen(){
 Studio::~Studio(){
     open = false;
     if (!trainers.empty()){
-        for (size_t i = 0; i < trainers.size(); i++)
+        for (size_t i = 0; i < trainers.size(); i++) {
+//            for (size_t j = 0; j < trainers[i]->getCustomers().size(); j++)
+//                delete trainers[i]->getCustomers()[j];
             delete trainers[i];
+        }
     }
     trainers.clear();
     workout_options.clear();
     if (!actionsLog.empty()){
-        for (size_t i = 0; i < actionsLog.size(); i++)
+        for (size_t i = 0; i < actionsLog.size(); i++) {
+            if (dynamic_cast<OpenTrainer*>(actionsLog[i])) {
+                for (size_t j = 0; j < dynamic_cast<OpenTrainer *>(actionsLog[i])->getCustomers().size(); j++) {
+                    delete dynamic_cast<OpenTrainer *>(actionsLog[i])->getCustomers()[j];
+                    dynamic_cast<OpenTrainer *>(actionsLog[i])->getCustomers()[j] = nullptr;
+                }
+            }
+            else if (dynamic_cast<MoveCustomer*>(actionsLog[i]))
             delete actionsLog[i];
+        }
     }
     actionsLog.clear();
 }
@@ -374,11 +410,15 @@ Studio &Studio::operator=(const Studio &other) {
     if (this == &other)
         return *this;
     open = other.open;
-//    for (size_t i = 0; i < trainers.size(); i++)
-//        delete trainers[i];
+    for (size_t i = 0; i < trainers.size(); i++) {
+        for (size_t j = 0; j < trainers[i]->getCustomers().size(); j++)
+            delete trainers[i]->getCustomers()[j];
+        trainers[i]->getCustomers().clear();
+        delete trainers[i];
+    }
     trainers.clear();
     for (size_t i = 0; i < other.trainers.size(); i++){
-        Trainer* t(other.trainers[i]);
+        Trainer* t = new Trainer(*other.trainers[i]);
         trainers.push_back(t);
     }
     workout_options.clear();
@@ -387,9 +427,15 @@ Studio &Studio::operator=(const Studio &other) {
                             other.workout_options[i].getPrice(), other.workout_options[i].getType());
         workout_options.push_back(w);
     }
-//    for (size_t i = 0; i < actionsLog.size(); i++){
-//        delete actionsLog[i];
-//    }
+    for (size_t i = 0; i < actionsLog.size(); i++){
+        if (dynamic_cast<OpenTrainer*>(actionsLog[i])) {
+            for (size_t j = 0; j < dynamic_cast<OpenTrainer *>(actionsLog[i])->getCustomers().size(); j++) {
+                delete dynamic_cast<OpenTrainer *>(actionsLog[i])->getCustomers()[j];
+                dynamic_cast<OpenTrainer *>(actionsLog[i])->getCustomers()[j] = nullptr;
+            }
+        }
+        delete actionsLog[i];
+    }
     actionsLog.clear();
     for (size_t i = 0; i < other.actionsLog.size(); i++){
         BaseAction* action = &other.actionsLog[i]->clone();
