@@ -48,12 +48,6 @@ Workout.h
 string
 -
 
-/mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/src/Action.cpp
-../include/Action.h
-/mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/include/Action.h
-../include/Studio.h
-/mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/include/Studio.h
-
 /mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/src/Studio.cpp
 iostream
 -
@@ -69,6 +63,12 @@ sstream
 -
 ../include/Studio.h
 /mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/include/Studio.h
+
+/mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/src/Trainer.cpp
+../include/Trainer.h
+/mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/include/Trainer.h
+iostream
+-
 
 /mnt/c/Users/Omri/CLionProjects/SPL/Assignment1/src/main.cpp
 ../include/Studio.h
