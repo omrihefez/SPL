@@ -202,7 +202,7 @@ void Studio::start() {
                 a->act(*this);
                 if (a->getStatus() == ERROR)
                     cout << "Error: Workout session does not exist or is already open." << endl;
-                BaseAction* clone = &(a->clone());
+                BaseAction* clone = (a->clone());
                 actionsLog.push_back(clone);
                 delete a;
                 s = "";
@@ -217,7 +217,7 @@ void Studio::start() {
                 a->act(*this);
                 if (a->getStatus() == ERROR)
                     cout << "Error: Workout session does not exist or is already open." << endl;
-                BaseAction* clone = &(a->clone());
+                BaseAction* clone = (a->clone());
                 actionsLog.push_back(clone);
                 delete a;
                 s = "";
@@ -246,7 +246,7 @@ void Studio::start() {
                 a->act(*this);
                 if (a->getStatus() == ERROR)
                     cout << "Cannot move customer." << endl;
-                BaseAction* clone = &(a->clone());
+                BaseAction* clone = (a->clone());
                 actionsLog.push_back(clone);
                 delete a;
                 s = "";
@@ -259,7 +259,7 @@ void Studio::start() {
                 a->act(*this);
                 if (a->getStatus() == ERROR)
                     cout << "Error: Trainer does not exist or is not open" << endl;
-                BaseAction* clone = &(a->clone());
+                BaseAction* clone = (a->clone());
                 actionsLog.push_back(clone);
                 delete a;
                 s = "";
@@ -270,7 +270,7 @@ void Studio::start() {
                 int trainerId = stoi(s.substr(7, s.length() - 1));
                 PrintTrainerStatus* a = new PrintTrainerStatus(trainerId);
                 a->act(*this);
-                BaseAction* clone = &(a->clone());
+                BaseAction* clone = (a->clone());
                 actionsLog.push_back(clone);
                 delete a;
                 s = "";
@@ -280,7 +280,7 @@ void Studio::start() {
             case (5): { // print workout options
                 PrintWorkoutOptions* a = new PrintWorkoutOptions();
                 a->act(*this);
-                BaseAction* clone = &(a->clone());
+                BaseAction* clone = (a->clone());
                 actionsLog.push_back(clone);
                 delete a;
                 s = "";
@@ -290,7 +290,7 @@ void Studio::start() {
             case (6): { // print action log
                 PrintActionsLog* a = new PrintActionsLog();
                 a->act(*this);
-                BaseAction* clone = &(a->clone());
+                BaseAction* clone = (a->clone());
                 delete a;
                 actionsLog.push_back(clone);
                 s = "";
@@ -300,7 +300,7 @@ void Studio::start() {
             case (7): { // backup studio
                 BackupStudio* a = new BackupStudio();
                 a->act(*this);
-                BaseAction* clone = &(a->clone());
+                BaseAction* clone = (a->clone());
                 actionsLog.push_back(clone);
                 delete a;
                 s = "";
@@ -312,7 +312,7 @@ void Studio::start() {
                 a->act(*this);
                 if (a->getStatus() == ERROR)
                     cout << "Error: No backup available" << endl;
-                BaseAction* clone = &(a->clone());
+                BaseAction* clone = (a->clone());
                 actionsLog.push_back(clone);
                 delete a;
                 s = "";
@@ -322,7 +322,7 @@ void Studio::start() {
             case (9): { // close all
                 CloseAll* a = new CloseAll();
                 a->act(*this);
-                BaseAction* clone = &(a->clone());
+                BaseAction* clone = (a->clone());
                 actionsLog.push_back(clone);
                 delete a;
                 open = false;
@@ -380,7 +380,6 @@ Studio::~Studio(){
                     dynamic_cast<OpenTrainer *>(actionsLog[i])->getCustomers()[j] = nullptr;
                 }
             }
-            else if (dynamic_cast<MoveCustomer*>(actionsLog[i]))
             delete actionsLog[i];
         }
     }
@@ -400,7 +399,7 @@ Studio::Studio (const Studio &other): Studio() {
         workout_options.push_back(w);
     }
     for (size_t i = 0; i < other.actionsLog.size(); i++){
-        BaseAction* action = &other.actionsLog[i]->clone();
+        BaseAction* action = other.actionsLog[i]->clone();
         actionsLog.push_back(action);
     }
 }
@@ -438,7 +437,7 @@ Studio &Studio::operator=(const Studio &other) {
     }
     actionsLog.clear();
     for (size_t i = 0; i < other.actionsLog.size(); i++){
-        BaseAction* action = &other.actionsLog[i]->clone();
+        BaseAction* action = other.actionsLog[i]->clone();
         actionsLog.push_back(action);
     }
     return *this;
